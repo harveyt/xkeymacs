@@ -268,25 +268,51 @@ BOOL CXkeymacsDll::ReleaseKeyboardHook()
 void CXkeymacsDll::SetKeyboardHookFlag(BOOL bFlag)
 {
 	m_bHook = bFlag;
+#ifdef ENABLE_LOG
+	const char *status = "unknown";
+#endif
 
 	if (m_bHook) {
 		if (CCommands::IsTemporarilyDisableXKeymacs()) {
 			m_stNtfyIcon[MAIN_ICON].hIcon = m_hIcon[MAIN_ICON][STATUS_DISABLE_TMP];
 			m_hCurrentCursor = m_hCursor[STATUS_DISABLE_TMP];
+#ifdef ENABLE_LOG
+			status = "DISABLE_TMP";
+#endif
 		} else {
 			m_stNtfyIcon[MAIN_ICON].hIcon = m_hIcon[MAIN_ICON][STATUS_ENABLE];
 			m_hCurrentCursor = m_hCursor[STATUS_ENABLE];
+#ifdef ENABLE_LOG
+			status = "ENABLE";
+#endif
 		}
 	} else {
 		m_stNtfyIcon[MAIN_ICON].hIcon = m_hIcon[MAIN_ICON][STATUS_DISABLE_WOCQ];
 		m_hCurrentCursor = m_hCursor[STATUS_DISABLE_WOCQ];
+#ifdef ENABLE_LOG
+			status = "DISABLE_WOCQ";
+#endif
 	}
-	if (m_nSettingStyle[m_nApplicationID] == SETTING_DISABLE
-	 || (!_tcsicmp(m_szSpecialApp[m_nApplicationID], _T("Default"))
-	  && CUtils::IsDefaultIgnoreApplication())) {
+	if (m_nSettingStyle[m_nApplicationID] == SETTING_DISABLE)
+	{
+#ifdef ENABLE_LOG
+		status = "DISABLE";
+#endif
 		m_stNtfyIcon[MAIN_ICON].hIcon = m_hIcon[MAIN_ICON][STATUS_DISABLE];
 		m_hCurrentCursor = m_hCursor[STATUS_DISABLE];
 	}
+
+	if (!_tcsicmp(m_szSpecialApp[m_nApplicationID], _T("Default"))
+		&& CUtils::IsDefaultIgnoreApplication()) {
+#ifdef ENABLE_LOG
+		status = "DISABLE - default";
+#endif
+		m_stNtfyIcon[MAIN_ICON].hIcon = m_hIcon[MAIN_ICON][STATUS_DISABLE];
+		m_hCurrentCursor = m_hCursor[STATUS_DISABLE];
+	}
+
+	XK_LOG(_T("SetKeyboardHookFlag - status=%s appID=%d"), status, m_nApplicationID);
+
 	DoShell_NotifyIcon(MAIN_ICON, NIM_MODIFY);
 	DoSetCursor();
 }
