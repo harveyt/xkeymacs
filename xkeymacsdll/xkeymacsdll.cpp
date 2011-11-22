@@ -306,6 +306,7 @@ void CXkeymacsDll::LogCallWndProcMessage(WPARAM wParam, LPARAM lParam)
 	CWPSTRUCT &cwps = *(CWPSTRUCT *)lParam;
 
 	switch (cwps.message) {
+#if 0
 	case WM_PAINT:					// 0x000F
 	case WM_MDIGETACTIVE:			// 0x0229
 	case 0x0403:
@@ -421,10 +422,22 @@ void CXkeymacsDll::LogCallWndProcMessage(WPARAM wParam, LPARAM lParam)
 	default:
 		XK_LOG(_T("CallWndProc: cwps.message = 0x%04X"), cwps.message);
 		break;
+#else
+	case WM_ACTIVATE:
+		XK_LOG(_T("CallWndProc: WM_ACTIVE wParam=%p lParam=%p foreground=%p"), wParam, lParam, GetForegroundWindow());
 		break;
+
+	case WM_SETFOCUS:
+		XK_LOG(_T("CallWndProc: WM_SETFOCUS hwnd=%p foreground=%p"), cwps.hwnd, GetForegroundWindow());
+		break;
+
+	case WM_NCACTIVATE:
+		XK_LOG(_T("CallWndProc: WM_NCACTIVATE hwnd=%p foreground=%p"), cwps.hwnd, GetForegroundWindow());
+		break;
+
 	default:
-//		CUtils::Log(_T("CallWndProc: cwps.message = 0x%04X"), cwps.message);
 		break;
+#endif
 	}
 }
 
