@@ -334,6 +334,10 @@ void CUtils::SetCorrectApplicationName(LPTSTR szApplicationName, const int nAppl
 
 void CUtils::SetApplicationName(BOOL bImeComposition)
 {
+	// TODO: Ignore IME composition, don't need it, and it's confusing Emacs.
+	if (bImeComposition)
+		return;
+
 	XK_LOG(_T("SetApplicationName: start"));
 
 	memset(m_szApplicationName, 0, sizeof(m_szApplicationName));
@@ -353,11 +357,17 @@ void CUtils::SetApplicationName(BOOL bImeComposition)
 
 		HKL hKL = GetKeyboardLayout(0);
 		if (ImmIsIME(hKL)) {
+			XK_LOG(_T("SetApplicationName: bImeComposition 1"));
 			if (!ImmGetIMEFileName(hKL, m_szApplicationName, sizeof(m_szApplicationName))) {
+				XK_LOG(_T("SetApplicationName: bImeComposition 2"));
 				_tcsncpy(m_szApplicationName, m_szIMEName, sizeof(m_szApplicationName));
 			}
+			XK_LOG(_T("SetApplicationName: bImeComposition 3"));
+
 			_tcsncpy(m_szIMEName, m_szApplicationName, sizeof(m_szIMEName));
 		} else {
+			XK_LOG(_T("SetApplicationName: bImeComposition 4"));
+
 			// ImmIsIME return 0 on Word2002, Excel2002, etc. with IME2002, so...
 			// _tcsncpy(m_szApplicationName, _T("imjp81.ime"), sizeof(m_szApplicationName));
 			_tcsncpy(m_szApplicationName, m_szIMEName, sizeof(m_szApplicationName));
