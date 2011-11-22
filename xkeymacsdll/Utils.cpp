@@ -334,7 +334,7 @@ void CUtils::SetCorrectApplicationName(LPTSTR szApplicationName, const int nAppl
 
 void CUtils::SetApplicationName(BOOL bImeComposition)
 {
-//	CUtils::Log(_T("SetApplicationName: start"));
+	XK_LOG(_T("SetApplicationName: start"));
 
 	memset(m_szApplicationName, 0, sizeof(m_szApplicationName));
 
@@ -344,12 +344,12 @@ void CUtils::SetApplicationName(BOOL bImeComposition)
 			if (!ImmGetIMEFileName(hKL, m_szIMEName, sizeof(m_szIMEName))) {
 				_tcsncpy(m_szIMEName, _T("IME"), sizeof(m_szIMEName));	// IDS_IME_FILE_NAME
 			}
-//			CUtils::Log(_T("SetApplicationName: m_szIMEName == %s"), m_szIMEName);
+			XK_LOG(_T("SetApplicationName: m_szIMEName == %s"), m_szIMEName);
 		}
 	}
 
 	if (bImeComposition) {
-//		CUtils::Log(_T("SetApplicationName: bImeComposition"));
+		XK_LOG(_T("SetApplicationName: bImeComposition"));
 
 		HKL hKL = GetKeyboardLayout(0);
 		if (ImmIsIME(hKL)) {
@@ -363,7 +363,7 @@ void CUtils::SetApplicationName(BOOL bImeComposition)
 			_tcsncpy(m_szApplicationName, m_szIMEName, sizeof(m_szApplicationName));
 		}
 	} else {
-//		CUtils::Log(_T("SetApplicationName: appication (%s)"), m_szApplicationName);
+		XK_LOG(_T("SetApplicationName: appication (%s)"), m_szApplicationName);
 
 		GetModuleFileName(NULL, m_szApplicationName, sizeof(m_szApplicationName));
 		CString szFn(m_szApplicationName);
@@ -371,10 +371,10 @@ void CUtils::SetApplicationName(BOOL bImeComposition)
 		ZeroMemory(m_szApplicationName, sizeof(m_szApplicationName));
 		_tcsncpy(m_szApplicationName, szFn, szFn.GetLength());
 
-//		CUtils::Log(_T("SetApplicationName: appication [%s]"), m_szApplicationName);
+		XK_LOG(_T("SetApplicationName: appication [%s]"), m_szApplicationName);
 
 		if (IsConsole()) {
-//			CUtils::Log(_T("SetApplicationName: console"));
+			XK_LOG(_T("SetApplicationName: console"));
 
 			memset(m_szApplicationName, 0, sizeof(m_szApplicationName));
 			if (IsNT()) {
@@ -391,13 +391,14 @@ void CUtils::SetApplicationName(BOOL bImeComposition)
 			SetCorrectApplicationName(m_szApplicationName, sizeof(m_szApplicationName), szWindowText, sizeof(szWindowText));
 		}
 		if (!_tcsicmp(m_szApplicationName, _T("Cygwin.exe"))) {
-//			CUtils::Log(_T("SetApplicationName: cygwin"));
+			XK_LOG(_T("SetApplicationName: cygwin"));
 
 			memset(m_szApplicationName, 0, sizeof(m_szApplicationName));
 			_tcscpy(m_szApplicationName, _T("bash.exe"));
 		}
-//		CUtils::Log(_T("name: %s"), m_szApplicationName);
 	}
+
+	XK_LOG(_T("SetApplicationName: name=%s"), m_szApplicationName);
 }
 
 void CUtils::SetIMEName()

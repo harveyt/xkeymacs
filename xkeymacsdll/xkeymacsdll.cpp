@@ -15,7 +15,6 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-
 static AFX_EXTENSION_MODULE XkeymacsdllDLL = { NULL, NULL };
 
 static HINSTANCE g_hDllInst = NULL;
@@ -58,7 +57,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 		}
 		catch (CMemoryException* e) {
 			e->Delete();
-//			CUtils::Log("DllMain: 'new' threw an exception");
+//			XK_LOG("DllMain: 'new' threw an exception");
 		}
 	} else if (dwReason == DLL_PROCESS_DETACH) {
 		TRACE0("XKEYMACSDLL.DLL Terminating!\n");
@@ -316,108 +315,112 @@ void CXkeymacsDll::LogCallWndProcMessage(WPARAM wParam, LPARAM lParam)
 	case 0x0440:
 		break;
 	case WM_CREATE:					// 0x0001
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_CREATE"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_CREATE"));
 		break;
 	case WM_DESTROY:				// 0x0002
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_DESTROY"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_DESTROY"));
 		break;
 	case WM_MOVE:					// 0x0003
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_MOVE");)
+		XK_LOG(_T("CallWndProc: cwps.message = WM_MOVE"));
 		break;
 	case WM_SIZE:					// 0x0005
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_SIZE"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_SIZE"));
 		break;
 	case WM_GETTEXT:				// 0x000D
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_GETTEXT"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_GETTEXT"));
 		break;
 	case WM_ERASEBKGND:				// 0x0014
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_ERASEBKGND"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_ERASEBKGND"));
 		break;
 	case WM_WINDOWPOSCHANGING:		// 0x0046
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_WINDOWPOSCHANGING"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_WINDOWPOSCHANGING"));
 		break;
 	case WM_WINDOWPOSCHANGED:		// 0x0047
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_WINDOWPOSCHANGED"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_WINDOWPOSCHANGED"));
 		break;
 	case WM_COPYDATA:				// 0x004A
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_COPYDATA"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_COPYDATA"));
 		break;
 	case WM_NCCREATE:				// 0x0081
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_NCCREATE"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_NCCREATE"));
 		break;
 	case WM_NCDESTROY:				// 0x0082
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_NCDESTROY"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_NCDESTROY"));
 		break;
 	case WM_NCCALCSIZE:				// 0x0083
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_NCCALCSIZE"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_NCCALCSIZE"));
 		break;
 	case WM_NCPAINT:				// 0x0085
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_NCPAINT"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_NCPAINT"));
 		break;
 	case WM_IME_STARTCOMPOSITION:	// 0x010D
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_IME_STARTCOMPOSITION"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_IME_STARTCOMPOSITION"));
 		break;
 	case WM_IME_ENDCOMPOSITION:		// 0x010E
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_IME_ENDCOMPOSITION"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_IME_ENDCOMPOSITION"));
 		break;
 	case WM_IME_KEYLAST:			// 0x010F
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_IME_KEYLAST"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_IME_KEYLAST"));
 		break;
 	case WM_COMMAND:				// 0x0111
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_COMMAND"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_COMMAND"));
 		break;
 	case WM_CTLCOLOREDIT:			// 0x0133
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_CTLCOLOREDIT"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_CTLCOLOREDIT"));
 		break;
 	case WM_POWERBROADCAST:			// 0x0218
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_POWERBROADCAST"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_POWERBROADCAST"));
 		switch (wParam) {
 		case PBT_APMQUERYSUSPEND:		// 0x0000
-//			CUtils::Log(_T("PBT_APMQUERYSUSPEND"));
+			XK_LOG(_T("PBT_APMQUERYSUSPEND"));
 			break;
 		case PBT_APMQUERYSTANDBY:		// 0x0001
-//			CUtils::Log(_T("PBT_APMQUERYSTANDBY"));
+			XK_LOG(_T("PBT_APMQUERYSTANDBY"));
 			break;
 		case PBT_APMQUERYSUSPENDFAILED:	// 0x0002
-//			CUtils::Log(_T("PBT_APMQUERYSUSPENDFAILED"));
+			XK_LOG(_T("PBT_APMQUERYSUSPENDFAILED"));
 			break;
 		case PBT_APMQUERYSTANDBYFAILED:	// 0x0003
-//			CUtils::Log(_T("PBT_APMQUERYSTANDBYFAILED"));
+			XK_LOG(_T("PBT_APMQUERYSTANDBYFAILED"));
 			break;
 		case PBT_APMSUSPEND:			// 0x0004
-//			CUtils::Log(_T("PBT_APMSUSPEND"));
+			XK_LOG(_T("PBT_APMSUSPEND"));
 			break;
 		case PBT_APMSTANDBY:			// 0x0005
-//			CUtils::Log(_T("PBT_APMSTANDBY"));
+			XK_LOG(_T("PBT_APMSTANDBY"));
 			break;
 		case PBT_APMRESUMECRITICAL:		// 0x0006
-//			CUtils::Log(_T("PBT_APMRESUMECRITICAL"));
+			XK_LOG(_T("PBT_APMRESUMECRITICAL"));
 			break;
 		case PBT_APMRESUMESUSPEND:		// 0x0007
-//			CUtils::Log(_T("PBT_APMRESUMESUSPEND"));
+			XK_LOG(_T("PBT_APMRESUMESUSPEND"));
 			break;
 		case PBT_APMRESUMESTANDBY:		// 0x0008
-//			CUtils::Log(_T("PBT_APMRESUMESTANDBY"));
+			XK_LOG(_T("PBT_APMRESUMESTANDBY"));
 			break;
 		case PBT_APMBATTERYLOW:			// 0x0009
-//			CUtils::Log(_T("PBT_APMBATTERYLOW"));
+			XK_LOG(_T("PBT_APMBATTERYLOW"));
 			break;
 		case PBT_APMPOWERSTATUSCHANGE:	// 0x000A
-//			CUtils::Log(_T("PBT_APMPOWERSTATUSCHANGE"));
+			XK_LOG(_T("PBT_APMPOWERSTATUSCHANGE"));
 			break;
 		case PBT_APMOEMEVENT:			// 0x000B
-//			CUtils::Log(_T("PBT_APMOEMEVENT"));
+			XK_LOG(_T("PBT_APMOEMEVENT"));
 			break;
 		case PBT_APMRESUMEAUTOMATIC:	// 0x0012
-//			CUtils::Log(_T("PBT_APMRESUMEAUTOMATIC"));
+			XK_LOG(_T("PBT_APMRESUMEAUTOMATIC"));
 			break;
 		default:
-//			CUtils::Log(_T("PBT_OTHERS: %d"), wParam);
+			XK_LOG(_T("PBT_OTHERS: %d"), wParam);
 			break;
 		}
 		break;
 	case WM_IME_NOTIFY:				// 0x0282
-//		CUtils::Log(_T("CallWndProc: cwps.message = WM_IME_NOTIFY"));
+		XK_LOG(_T("CallWndProc: cwps.message = WM_IME_NOTIFY"));
+		break;
+	default:
+		XK_LOG(_T("CallWndProc: cwps.message = 0x%04X"), cwps.message);
+		break;
 		break;
 	default:
 //		CUtils::Log(_T("CallWndProc: cwps.message = 0x%04X"), cwps.message);
@@ -549,9 +552,9 @@ void CXkeymacsDll::DoKeybd_event(BYTE bVk, DWORD dwFlags)
 	case VK_MENU:
 		if (m_bRightAlt) {			// Right Alt
 			dwFlags |= KEYEVENTF_EXTENDEDKEY;
-//			CUtils::Log("Right Alt %d", dwFlags);
+//			XK_LOG("Right Alt %d", dwFlags);
 //		} else {
-//			CUtils::Log("Left Alt %d", dwFlags);
+//			XK_LOG("Left Alt %d", dwFlags);
 		}
 		break;
 
@@ -586,16 +589,16 @@ void CXkeymacsDll::DoKeybd_event(BYTE bVk, DWORD dwFlags)
 		break;
 	}
 
-//	CUtils::Log(_T("b: %x, %x, %x, %#x, %#x"), bVk, dwFlags, GetMessageExtraInfo(), GetKeyState(bVk), GetAsyncKeyState(bVk));
+//	XK_LOG(_T("b: %x, %x, %x, %#x, %#x"), bVk, dwFlags, GetMessageExtraInfo(), GetKeyState(bVk), GetAsyncKeyState(bVk));
 	keybd_event(bVk, 0, dwFlags, GetMessageExtraInfo());
-//	CUtils::Log(_T("a: %x, %x, %x, %#x, %#x"), bVk, dwFlags, GetMessageExtraInfo(), GetKeyState(bVk), GetAsyncKeyState(bVk));
+//	XK_LOG(_T("a: %x, %x, %x, %#x, %#x"), bVk, dwFlags, GetMessageExtraInfo(), GetKeyState(bVk), GetAsyncKeyState(bVk));
 }
 
 // the key is being depressed
 void CXkeymacsDll::DepressKey(BYTE bVk, BOOL bOriginal)	// bVk is virtual-key code, MSDN said
 {
 	if (bOriginal) {
-//		CUtils::Log(_T("i: %x, %d, %d, %d, %d, %d, %d, %d, %d"), bVk,
+//		XK_LOG(_T("i: %x, %d, %d, %d, %d, %d, %d, %d, %d"), bVk,
 //			IsDown(VK_CONTROL), IsDown(VK_CONTROL, FALSE), IsDepressedModifier(CCommands::C_), IsDepressedModifier(CCommands::C_, FALSE),
 //			IsDown(VK_MENU), IsDown(VK_MENU, FALSE), IsDepressedModifier(CCommands::MetaAlt), IsDepressedModifier(CCommands::MetaAlt, FALSE));
 
@@ -710,7 +713,7 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 	static BYTE nOneShotModifier[MAX_KEY] = {'\0'};
 	static BOOL bCherryOneShotModifier = FALSE;
 
-//	CUtils::Log(_T("nCode = %#x, nKey = %#x, lParam = %#x"), nCode, nKey, lParam);
+//	XK_LOG(_T("nCode = %#x, nKey = %#x, lParam = %#x"), nCode, nKey, lParam);
 
 	if (nCode < 0 || nCode == HC_NOREMOVE) {
 		goto DO_NOTHING;
@@ -864,7 +867,7 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 	}
 
 	{
-//		CUtils::Log(_T("o: %x, %d, %d, %d, %d, %d, %d, %d, %d"), (BYTE)wParam,
+//		XK_LOG(_T("o: %x, %d, %d, %d, %d, %d, %d, %d, %d"), (BYTE)wParam,
 //			IsDown(VK_CONTROL), IsDown(VK_CONTROL, FALSE), IsDepressedModifier(CCommands::C_), IsDepressedModifier(CCommands::C_, FALSE),
 //			IsDown(VK_MENU), IsDown(VK_MENU, FALSE), IsDepressedModifier(CCommands::MetaAlt), IsDepressedModifier(CCommands::MetaAlt, FALSE));
 
@@ -954,12 +957,12 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 			const BOOL bIsShiftDown = CXkeymacsDll::IsDown(VK_SHIFT);
 			for (TCHAR nAscii = 1; nAscii != 0; ++nAscii) { // repeat until overflow
 				if (nKey != 0 && a2v(nAscii) == nKey && bIsShiftDown == IsShift(nAscii)) {
-//					CUtils::Log("M-x: %#X (%c), %#X (%c)", nKey, nKey, nAscii, nAscii);
+//					XK_LOG("M-x: %#X (%c), %#X (%c)", nKey, nKey, nAscii, nAscii);
 					if (index < _tcslen(szPath)) {
 						memmove(&szPath[index + 1], &szPath[index], __min(_tcslen(szPath) - index, MAX_PATH - (index + 1) - 1));
 					}
 					szPath[index++] = nAscii;
-//					CUtils::Log("M-x: %c(%#04x)", nAscii, nAscii);
+//					XK_LOG("M-x: %c(%#04x)", nAscii, nAscii);
 					ModifyM_xTip(szPath);
 					goto HOOKX;
 				}
@@ -1152,7 +1155,7 @@ DO_NOTHING:
 				}
 				catch (CMemoryException* e) {
 					e->Delete();
-//					CUtils::Log("KeyboardProc: 'new' threw an exception");
+//					XK_LOG("KeyboardProc: 'new' threw an exception");
 				}
 				if (!(lParam & BEING_RELEASED)) {
 					bDown[wParam] = TRUE;
@@ -1796,33 +1799,33 @@ void CXkeymacsDll::DefiningMacro(BOOL bDefiningMacro)
 			}
 		}
 
-//		CUtils::Log(_T("Macro MemMap: start"));
+//		XK_LOG(_T("Macro MemMap: start"));
 		if (!m_Macro.IsEmpty()) {
 			static HANDLE hMacro = NULL;
 			if (!hMacro) {
 				hMacro = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, 0x3000, _T("macro"));
 			}
 			if (hMacro) {
-//				CUtils::Log(_T("Macro MemMap: 1"));
+//				XK_LOG(_T("Macro MemMap: 1"));
 				PVOID pView = MapViewOfFile(hMacro, FILE_MAP_ALL_ACCESS, 0, 0, 0);
-//				CUtils::Log(_T("Macro MemMap: 2"));
+//				XK_LOG(_T("Macro MemMap: 2"));
 				if (pView) {
-//					CUtils::Log(_T("Macro MemMap: 2.5"));
+//					XK_LOG(_T("Macro MemMap: 2.5"));
 					for (int i = 0; i < m_Macro.GetCount(); ++i) {
-//						CUtils::Log(_T("Macro MemMap: 3-1 %d"), i);
+//						XK_LOG(_T("Macro MemMap: 3-1 %d"), i);
 						KbdMacro_t *pKbdMacro = (KbdMacro_t *)m_Macro.GetAt(m_Macro.FindIndex(i));
-//						CUtils::Log(_T("Macro MemMap: 3-2 %d"), i);
+//						XK_LOG(_T("Macro MemMap: 3-2 %d"), i);
 						memcpy((LPTSTR) pView + i * sizeof(KbdMacro_t), pKbdMacro, sizeof(KbdMacro_t));
-//						CUtils::Log(_T("Macro MemMap: 3-3 %d"), i);
+//						XK_LOG(_T("Macro MemMap: 3-3 %d"), i);
 					}
-//					CUtils::Log(_T("Macro MemMap: 4"));
+//					XK_LOG(_T("Macro MemMap: 4"));
 					UnmapViewOfFile(pView);
-//					CUtils::Log(_T("Macro MemMap: 5"));
+//					XK_LOG(_T("Macro MemMap: 5"));
 				} else {
-//					CUtils::Log(_T("Macro MemMpa: error: %d"), GetLastError());
+//					XK_LOG(_T("Macro MemMpa: error: %d"), GetLastError());
 				}
 			} else {
-//				CUtils::Log(_T("Macro MemMap: 6"));
+//				XK_LOG(_T("Macro MemMap: 6"));
 				ASSERT(0);
 			}
 		}
@@ -1886,7 +1889,7 @@ void CXkeymacsDll::CallMacro()	// for debug
 			sz += t;
 		}
 	}
-//	CUtils::Log(sz);
+//	XK_LOG(sz);
 }
 /**/
 
@@ -2016,7 +2019,7 @@ void CXkeymacsDll::CallFunction(int nFunctionID)
 
 				bInitialized = TRUE;
 			}
-//			CUtils::Log("CallFunction: Command Name: %s", Commands[m_nCommandID[m_nApplicationID][nCommandType][bVk]].szCommandName);
+//			XK_LOG("CallFunction: Command Name: %s", Commands[m_nCommandID[m_nApplicationID][nCommandType][bVk]].szCommandName);
 			while (Commands[m_nCommandID[m_nApplicationID][nCommandType][bVk]].fCommand() == GOTO_RECURSIVE) {
 				;
 			}
@@ -2026,7 +2029,7 @@ void CXkeymacsDll::CallFunction(int nFunctionID)
 			} else {
 				for (TCHAR nAscii = 1; nAscii != 0; ++nAscii) { // repeat until overflow
 					if (bVk != 0 && a2v(nAscii) == bVk && ((nCommandType & SHIFT) != 0) == IsShift(nAscii)) {
-//						CUtils::Log("M-x: %#X (%c), %#X (%c)", bVk, bVk, nAscii, nAscii);
+//						XK_LOG("M-x: %#X (%c), %#X (%c)", bVk, bVk, nAscii, nAscii);
 						szPath[index++] = nAscii;
 						break;
 					}
@@ -2359,7 +2362,7 @@ BOOL CXkeymacsDll::IsMatchWindowText(CString szWindowText)
 		break;
 	}
 
-//	CUtils::Log(_T("IsMatchWindowText: %d, _%s_, _%s_"), bIsMatchWindowText, szCurrentWindowText, szWindowText);
+//	XK_LOG(_T("IsMatchWindowText: %d, _%s_, _%s_"), bIsMatchWindowText, szCurrentWindowText, szWindowText);
 	return bIsMatchWindowText;
 }
 
@@ -2426,7 +2429,7 @@ BOOL CXkeymacsDll::Get326Compatible()
 
 void CXkeymacsDll::InvokeM_x(const TCHAR *const szPath)
 {
-//	CUtils::Log("M-x: szPath=_%s_", szPath);
+//	XK_LOG("M-x: szPath=_%s_", szPath);
 	int (*fCommand)() = NULL;
 
 	for (int i = 0; i < sizeof(Commands) / sizeof(Commands[0]); ++i) {
@@ -2437,10 +2440,10 @@ void CXkeymacsDll::InvokeM_x(const TCHAR *const szPath)
 	}
 
 	if (fCommand) {
-//		CUtils::Log("M-x: Command: _%s_", Commands[i].szCommandName);
+//		XK_LOG("M-x: Command: _%s_", Commands[i].szCommandName);
 		fCommand();
 	} else {
-//		CUtils::Log("M-x: Path: _%s_", szPath);
+//		XK_LOG("M-x: Path: _%s_", szPath);
 		ShellExecute(NULL, NULL, szPath, NULL, NULL, SW_SHOWNORMAL);
 	}
 }

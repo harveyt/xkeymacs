@@ -9,6 +9,15 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#ifdef _DEBUG
+#define ENABLE_LOG
+#endif
+#ifdef ENABLE_LOG
+#define XK_LOG(fmt,...) CUtils::Log(fmt, __VA_ARGS__)
+#else
+#define XK_LOG(fmt,...) ((void)0)
+#endif
+
 class AFX_EXT_CLASS CUtils  
 {
 public:
