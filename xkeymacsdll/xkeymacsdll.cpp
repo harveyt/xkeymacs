@@ -557,6 +557,7 @@ LRESULT CALLBACK CXkeymacsDll::ShellProc(int nCode, WPARAM wParam, LPARAM lParam
 	{
 		TCHAR className[256];
 		::GetClassName((HWND)wParam, className, 255);
+		XK_LOG(_T("HSHELL_WINDOWACTIVATED: className=%s"), className);
 		if (!_tcsicmp(className, _T("ConsoleWindowClass"))) {
 			InitKeyboardProc(FALSE);
 			SetKeyboardHookFlag(m_bHook);
