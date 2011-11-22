@@ -136,7 +136,8 @@ BOOL CALLBACK CProfile::EnumWindowsProc(const HWND hWnd, const LPARAM lParam)
 	// Get Process Name
 	DWORD dwProcessId = 0;
 	GetWindowThreadProcessId(hWnd, &dwProcessId);
-	for (DWORD i = 0; i < CProfile::m_dwTasks; ++i) {
+	DWORD i;
+	for (i = 0; i < CProfile::m_dwTasks; ++i) {
 		if (pTask[i].dwProcessId == dwProcessId) {
 
 			// Get Application Name
@@ -656,7 +657,8 @@ void CProfile::SaveCommand(const CString szApplicationName, const int nCommandID
 
 void CProfile::AddKeyBind2C_(const CString szApplicationName, const BYTE bVk)
 {
-	for (int nCommandID = 0; nCommandID < sizeof(Commands) / sizeof(Commands[0]); ++nCommandID) {
+	int nCommandID;
+	for (nCommandID = 0; nCommandID < sizeof(Commands) / sizeof(Commands[0]); ++nCommandID) {
 		if (Commands[nCommandID].fCommand == CCommands::C_) {
 			break;
 		}
@@ -794,7 +796,9 @@ void CProfile::InitDllData()
 
 void CProfile::ClearData(const CString szCurrentApplication)
 {
-	for (int nApplicationID = 0; nApplicationID < MAX_APP; ++nApplicationID) {
+	int nApplicationID;
+
+	for (nApplicationID = 0; nApplicationID < MAX_APP; ++nApplicationID) {
 		if (m_XkeymacsData[nApplicationID].GetApplicationName() == szCurrentApplication) {
 			break;
 		}
@@ -808,8 +812,9 @@ void CProfile::ClearData(const CString szCurrentApplication)
 int CProfile::GetSavedSettingCount()
 {
 	int nSavedSetting = 0;
+	int nApplicationID;
 
-	for (int nApplicationID = 0; nApplicationID < MAX_APP; ++nApplicationID) {
+	for (nApplicationID = 0; nApplicationID < MAX_APP; ++nApplicationID) {
 		CString szApplicationName;
 		szApplicationName = m_XkeymacsData[nApplicationID].GetApplicationName();
 		if (!szApplicationName.IsEmpty()) {
@@ -988,12 +993,14 @@ BOOL CProfile::GetProcessInfo(CString *const szProcessName, DWORD *const dwProce
 	LPTSTR pTopOfString = (LPTSTR)pCounters;
 	while (*pTopOfString) {
 		if (_tcsicmp(pTopOfString, CString(MAKEINTRESOURCE(IDS_PROCESS))) == 0) {
-			for (LPTSTR p2 = pTopOfString - 2; _istdigit(*p2); --p2) {
+			LPTSTR p2;
+			for (p2 = pTopOfString - 2; _istdigit(*p2); --p2) {
 				;
 			}
 			szProcessName->Format(_T("%s"), p2 + 1);	// 230
 		} else if (_tcsicmp(pTopOfString, CString(MAKEINTRESOURCE(IDS_PROCESSID))) == 0) {
-			for (LPTSTR p2 = pTopOfString - 2; _istdigit(*p2); --p2) {
+			LPTSTR p2;
+			for (p2 = pTopOfString - 2; _istdigit(*p2); --p2) {
 				;
 			}
 			*dwProcessId = _ttol(p2 + 1);			// 784
@@ -1055,7 +1062,8 @@ DWORD CProfile::GetTaskListNT(PTASK_LIST pTask, DWORD dwNumTasks)
 	PPERF_OBJECT_TYPE pObj = (PPERF_OBJECT_TYPE) ((DWORD)pPerformanceData + pPerformanceData->HeaderLength);
 	PPERF_COUNTER_DEFINITION pCounterDef = (PPERF_COUNTER_DEFINITION) ((DWORD)pObj + pObj->HeaderLength);
 	DWORD dwProcessIdCounter = 0;
-	for (DWORD i = 0; i < pObj->NumCounters; ++i) {
+	DWORD i;
+	for (i = 0; i < pObj->NumCounters; ++i) {
 		if (pCounterDef->CounterNameTitleIndex == dwProcessIdTitle) {
 			dwProcessIdCounter = pCounterDef->CounterOffset;
 			break;

@@ -198,7 +198,8 @@ void CPropertiesAdvanced::InitCategoryList()
 		}
 
 		BOOL bExist = FALSE;
-		for (int i = 0; nCategoryIDs[i]; ++i) {
+		int i;
+		for (i = 0; nCategoryIDs[i]; ++i) {
 			if (nCategoryIDs[i] == nCategoryID) {
 				bExist = TRUE;
 			}
@@ -543,7 +544,8 @@ void CPropertiesAdvanced::SetCommandID(int nCommandType, int nKey, int nCommandI
 	// Set C-x if it is needed.
 	if ((nCommandType & CONTROLX)) {
 		// Get CommandID of C-x.
-		for (int nCommandIDofC_x = 0; nCommandIDofC_x < sizeof(Commands) / sizeof(Commands[0]); ++nCommandIDofC_x) {
+		int nCommandIDofC_x;
+		for (nCommandIDofC_x = 0; nCommandIDofC_x < sizeof(Commands) / sizeof(Commands[0]); ++nCommandIDofC_x) {
 			if (!_tcsicmp(CXkeymacsData::GetCommandName(nCommandIDofC_x), _T("C-x"))) {
 				break;
 			}
