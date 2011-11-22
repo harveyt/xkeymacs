@@ -469,7 +469,9 @@ void CXkeymacsDll::LogCallWndProcMessage(WPARAM wParam, LPARAM lParam)
 
 LRESULT CALLBACK CXkeymacsDll::CallWndProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
-//	LogCallWndProcMessage(wParam, lParam);
+#ifdef ENABLE_LOG
+	LogCallWndProcMessage(wParam, lParam);
+#endif
 
 	if (0 <= nCode) {
 		CWPSTRUCT &cwps = *(CWPSTRUCT *)lParam;
