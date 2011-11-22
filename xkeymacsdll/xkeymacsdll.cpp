@@ -1040,7 +1040,8 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 		Kdu(nKey);
 		goto HOOK;
 	} else {
-		for (int i = 0; i < MAX_KEY; ++i) {
+		int i;
+		for (i = 0; i < MAX_KEY; ++i) {
 			if (nOneShotModifier[i] == nKey) {
 				break;
 			}
@@ -1430,7 +1431,8 @@ void CXkeymacsDll::AddKillRing(BOOL bNewData)
 			if (m_oKillRing.IsEmpty()) {
 				m_oKillRing.AddHead(pSnap);
 			} else {
-				for (CClipboardSnap *pParent = m_oKillRing.GetHead(); pParent->GetNext(); pParent = pParent->GetNext()) {
+				CClipboardSnap *pParent;
+				for (pParent = m_oKillRing.GetHead(); pParent->GetNext(); pParent = pParent->GetNext()) {
 					;
 				}
 				pParent->SetNext(pSnap);
@@ -2139,7 +2141,8 @@ KeyBind_t CXkeymacsDll::ParseKey(const int nFunctionID, unsigned int &i)
 		keybind.nCommandType |= SHIFT;
 	}
 
-	for (int nKeyID = 0; nKeyID < sizeof(ControlCharacters) / sizeof(ControlCharacters[0]); ++nKeyID) {
+	int nKeyID;
+	for (nKeyID = 0; nKeyID < sizeof(ControlCharacters) / sizeof(ControlCharacters[0]); ++nKeyID) {
 		if (!_tcsncmp(m_szFunctionDefinition[nFunctionID] + i, ControlCharacters[nKeyID].name, _tcslen(ControlCharacters[nKeyID].name))) {
 			i += _tcslen(ControlCharacters[nKeyID].name);
 			break;
