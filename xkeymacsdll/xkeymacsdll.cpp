@@ -631,9 +631,9 @@ void CXkeymacsDll::DoKeybd_event(BYTE bVk, DWORD dwFlags)
 		break;
 	}
 
-//	XK_LOG(_T("b: %x, %x, %x, %#x, %#x"), bVk, dwFlags, GetMessageExtraInfo(), GetKeyState(bVk), GetAsyncKeyState(bVk));
+	XK_LOG(_T("b: %x, %x, %x, %#x, %#x"), bVk, dwFlags, GetMessageExtraInfo(), GetKeyState(bVk), GetAsyncKeyState(bVk));
 	keybd_event(bVk, 0, dwFlags, GetMessageExtraInfo());
-//	XK_LOG(_T("a: %x, %x, %x, %#x, %#x"), bVk, dwFlags, GetMessageExtraInfo(), GetKeyState(bVk), GetAsyncKeyState(bVk));
+	XK_LOG(_T("a: %x, %x, %x, %#x, %#x"), bVk, dwFlags, GetMessageExtraInfo(), GetKeyState(bVk), GetAsyncKeyState(bVk));
 }
 
 // the key is being depressed

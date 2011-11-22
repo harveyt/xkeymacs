@@ -599,7 +599,7 @@ int CCommands::KillLine(BOOL bAllFormat, int (*pCommand)())
 
 	switch (nStep) {
 	case 0:		// Clear Selection and get next character to confirm the cursor is at the EOF or not.
-//		CUtils::Log(_T("C-k: 0"));
+		XK_LOG(_T("C-k: 0"));
 		bTopOfFile = FALSE;
 
 		if (!m_bDefaultNumericArgument || m_bNegativeNumericArgument) {
@@ -646,14 +646,14 @@ int CCommands::KillLine(BOOL bAllFormat, int (*pCommand)())
 		CaptureClipboardData(0, CUtils::IsLotusNotes());
 
 		if (!CopyNextCharacter()) {
-//			CUtils::Log(_T("Error: CopyNextCharacter"));
+			XK_LOG(_T("Error: CopyNextCharacter"));
 			return Reset(GOTO_DO_NOTHING);
 		}
 
 		nStep = 4;
 		return Reset(GOTO_RECURSIVE);
 	case 1:		// Get back character to confirm the cursor is at the TOF or not only for Macromedia Director.
-//		CUtils::Log(_T("C-k: 1"));
+		XK_LOG(_T("C-k: 1"));
 		nStep = 0;
 		CaptureClipboardData();
 
@@ -665,7 +665,7 @@ int CCommands::KillLine(BOOL bAllFormat, int (*pCommand)())
 		return Reset(GOTO_RECURSIVE);
 	case 2:		// Confirm the cursor is at the TOF or not only for Macromedia Director.
 		{
-//			CUtils::Log(_T("C-k: 2"));
+			XK_LOG(_T("C-k: 2"));
 			nStep = 0;
 			Su();
 
@@ -681,7 +681,7 @@ int CCommands::KillLine(BOOL bAllFormat, int (*pCommand)())
 			return Reset(GOTO_RECURSIVE);
 		}
 	case 3:		// Get next character to confirm the cursor is at the EOF or not.
-//		CUtils::Log(_T("C-k: 3"));
+		XK_LOG(_T("C-k: 3"));
 		nStep = 0;
 
 		if (CUtils::IsLotus123()) {
@@ -694,14 +694,14 @@ int CCommands::KillLine(BOOL bAllFormat, int (*pCommand)())
 		CaptureClipboardData();
 
 		if (!CopyNextCharacter()) {
-//			CUtils::Log(_T("Error: CopyNextCharacter"));
+			XK_LOG(_T("Error: CopyNextCharacter"));
 			return Reset(GOTO_DO_NOTHING);
 		}
 
 		nStep = 4;
 		return Reset(GOTO_RECURSIVE);
 	case 4:		// Cut line
-//		CUtils::Log(_T("C-k: 4"));
+		XK_LOG(_T("C-k: 4"));
 		nStep = 0;
 		Su();
 
@@ -713,10 +713,10 @@ int CCommands::KillLine(BOOL bAllFormat, int (*pCommand)())
 		}
 
 		CUtils::GetClipboardText(&szClipboardText);
-//		CUtils::Log(_T("%x, %s"), szClipboardText.GetAt(0), szClipboardText);
+		XK_LOG(_T("%x, %s"), szClipboardText.GetAt(0), szClipboardText);
 
 		if (szClipboardText.IsEmpty()) {	// EOF
-//			CUtils::Log(_T("C-k: EOF"));
+			XK_LOG(_T("C-k: EOF"));
 			if (CUtils::IsLotusWordPro()
 			 || CUtils::IsMicrosoftFrontPage()
 			 || CUtils::IsMicrosoftWord()) {
@@ -736,13 +736,13 @@ int CCommands::KillLine(BOOL bAllFormat, int (*pCommand)())
 				// default
 				Kdu(VK_RIGHT);
 				RestoreClipboardData();
-//				CUtils::Log(_T("C-k: 4-1"));
+				XK_LOG(_T("C-k: 4-1"));
 				return Reset(GOTO_HOOK);
 			}
 		}
 
 		if (szClipboardText.GetAt(0) != VK_RETURN) {
-//			CUtils::Log(_T("C-k: szClipboardText.GetAt(0) != VK_RETURN"));
+			XK_LOG(_T("C-k: szClipboardText.GetAt(0) != VK_RETURN"));
 			if (CUtils::IsDirector()) {
 				ReleaseKey(VK_CONTROL);
 				SdKduSu(VK_END);
@@ -763,7 +763,7 @@ int CCommands::KillLine(BOOL bAllFormat, int (*pCommand)())
 				Copy_();
 			}
 		} else {	// EOL
-//			CUtils::Log(_T("C-k: EOL"));
+			XK_LOG(_T("C-k: EOL"));
 			if (CUtils::IsDirector()) {
 				ReleaseKey(VK_CONTROL);
 				SdKduSu(VK_RIGHT);
@@ -788,27 +788,27 @@ int CCommands::KillLine(BOOL bAllFormat, int (*pCommand)())
 		nStep = 5;
 		return Reset(GOTO_RECURSIVE);
 	case 5:		// input return if XKeymacs not only line but also line feed code and set the kill-line data on the clipboard.
-//		CUtils::Log(_T("C-k: 5"));
+		XK_LOG(_T("C-k: 5"));
 		nStep = 0;
 
 		if (1000 < nRepeat) {
-//			CUtils::Log(_T("C-k: 5-1"));
+			XK_LOG(_T("C-k: 5-1"));
 			nStep = 6;
 			return Reset(GOTO_RECURSIVE);
 		}
 
-//		CUtils::Log(_T("C-k: 5-1-1"));
+		XK_LOG(_T("C-k: 5-1-1"));
 		Su();
-//		CUtils::Log(_T("C-k: 5-1-2"));
+		XK_LOG(_T("C-k: 5-1-2"));
 		CaptureClipboardData(1, CUtils::IsLotusNotes());
-//		CUtils::Log(_T("C-k: 5-1-3"));
+		XK_LOG(_T("C-k: 5-1-3"));
 
 //		if (m_oClipboardData.GetSize() < 1 || m_oClipboardData[0] == NULL) {
-////			CUtils::Log(_T("C-k: 5-2"));
+////			XK_LOG(_T("C-k: 5-2"));
 //			nStep = 6;
 //			return Reset(GOTO_RECURSIVE);
 //		} else if (m_oClipboardData.GetSize() < 2 || m_oClipboardData[1] == NULL) {
-////			CUtils::Log(_T("C-k: 5-3"));
+////			XK_LOG(_T("C-k: 5-3"));
 //			nStep = 5;
 //			return Reset(GOTO_RECURSIVE);
 //		}
@@ -820,43 +820,43 @@ int CCommands::KillLine(BOOL bAllFormat, int (*pCommand)())
 		 || CUtils::IsOpenOffice()
 		 || CUtils::IsTuruKameMail()) {
 			// do nothing
-//			CUtils::Log(_T("C-k: 5-4"));
+			XK_LOG(_T("C-k: 5-4"));
 		} else {
 			// This changed will be required to avoid Thunderbird bug.
 			// if (0 < FindReturnFromClipboardData(1) && !CUtils::IsExcel() && !CUtils::IsThunderbird()) {
 			if (0 < FindReturnFromClipboardData(1) && !CUtils::IsExcel()) {
-//				CUtils::Log(_T("C-k: 5-5"));
+				XK_LOG(_T("C-k: 5-5"));
 				SdKduSu(VK_LEFT);
 				Copy_();
 				nStep = 5;
 				return Reset(GOTO_RECURSIVE);
 			} else {
 				Kdu(VK_DELETE);
-//				CUtils::Log(_T("C-k: 5-6"));
+				XK_LOG(_T("C-k: 5-6"));
 			}
 		}
 
 		bKeepAllFormat = bAllFormat;
 		if (!bKeepAllFormat
 		 && !m_oClipboardData[1]->IsAllMergeableFormat()) {
-//			CUtils::Log(_T("C-k: 5-7"));
+			XK_LOG(_T("C-k: 5-7"));
 			bKeepAllFormat = TRUE;
 		}
 
 		if (bContinuous && !bKeepAllFormat) {
-//			CUtils::Log(_T("C-k: 5-8"));
+			XK_LOG(_T("C-k: 5-8"));
 			*m_oClipboardData[0] += *m_oClipboardData[1];
 		} else {
-//			CUtils::Log(_T("C-k: 5-9"));
+			XK_LOG(_T("C-k: 5-9"));
 			*m_oClipboardData[0] = *m_oClipboardData[1];
 		}
 		RestoreClipboardData(0);
 
-//		CUtils::Log(_T("C-k: 5-10"));
+		XK_LOG(_T("C-k: 5-10"));
 		nStep = 6;
 		return Reset(GOTO_RECURSIVE);
 	case 6:		// add data into kill-ring
-//		CUtils::Log(_T("C-k: 6"));
+		XK_LOG(_T("C-k: 6"));
 		nStep = 0;
 		Su();
 
@@ -1159,12 +1159,12 @@ DWORD CCommands::ClickCaret()
 	if (!GetCaretPos(&CaretPos)) {
 		return GetLastError();
 	}
-//	CUtils::Log(_T("client: x = %d, y = %d"), CaretPos.x, CaretPos.y);
+//	XK_LOG(_T("client: x = %d, y = %d"), CaretPos.x, CaretPos.y);
 
 	if (!ClientToScreen(hWnd, &CaretPos)) {
 		return GetLastError();
 	}
-//	CUtils::Log(_T("screen: x = %d, y = %d"), CaretPos.x, CaretPos.y);
+//	XK_LOG(_T("screen: x = %d, y = %d"), CaretPos.x, CaretPos.y);
 
 	POINT Delta = {0, 1};
 	if (CUtils::IsSakuraEditor()) {
@@ -1736,7 +1736,7 @@ int CCommands::Recenter()
 			|| CUtils::IsThunderbird()) {
 		RECT ClientRect = {'\0'};
 		GetClientRect(GetFocus(), &ClientRect);
-//		CUtils::Log(_T("top = %d, bottom = %d, left = %d, right = %d"), ClientRect.top, ClientRect.bottom, ClientRect.left, ClientRect.right);
+//		XK_LOG(_T("top = %d, bottom = %d, left = %d, right = %d"), ClientRect.top, ClientRect.bottom, ClientRect.left, ClientRect.right);
 
 		POINT CaretPos = {'\0'};
 		GetCaretPos(&CaretPos);
@@ -1755,7 +1755,7 @@ int CCommands::Recenter()
 		GetClientRect(GetFocus(), &ClientRect);
 		int gap = INT_MAX;
 
-//		CUtils::Log(_T("top = %d, bottom = %d, left = %d, right = %d"), ClientRect.top, ClientRect.bottom, ClientRect.left, ClientRect.right);
+//		XK_LOG(_T("top = %d, bottom = %d, left = %d, right = %d"), ClientRect.top, ClientRect.bottom, ClientRect.left, ClientRect.right);
 
 		for (;;) {
 			POINT CaretPos = {'\0'};
@@ -1866,7 +1866,7 @@ int CCommands::TransposeChars()
 
 			CString szClipboardText;
 			CUtils::GetClipboardText(&szClipboardText);
-//			CUtils::Log(_T("%x, %d, %s"), szClipboardText.GetAt(0), szClipboardText.GetLength(), szClipboardText);
+//			XK_LOG(_T("%x, %d, %s"), szClipboardText.GetAt(0), szClipboardText.GetLength(), szClipboardText);
 
 			if (CUtils::IsDirector()
 			 ||	CUtils::IsEudora()) {
@@ -2267,7 +2267,7 @@ void CCommands::OpenFindDialog()
 
 int CCommands::Search(SEARCH_DIRECTION direction)
 {
-//	CUtils::Log(_T("%s"), CUtils::GetApplicationName());
+//	XK_LOG(_T("%s"), CUtils::GetApplicationName());
 
 	if (CUtils::IsIllustrator()
 	 || CUtils::IsPaint()
@@ -2298,7 +2298,7 @@ int CCommands::Search(SEARCH_DIRECTION direction)
 	}
 
 	if (!CUtils::IsFindDialog()) {
-//		CUtils::Log(_T("Find Dialog is not."));
+//		XK_LOG(_T("Find Dialog is not."));
 
 		// F3 or Shift+F3
 		if (m_LastCommand == IsearchForward
@@ -2332,7 +2332,7 @@ int CCommands::Search(SEARCH_DIRECTION direction)
 		m_SearchDirection = direction;
 		OpenFindDialog();
 	} else {
-//		CUtils::Log(_T("Find Dialog is opened."));
+//		XK_LOG(_T("Find Dialog is opened."));
 
 		if (CUtils::IsHidemaru()
 		 || CUtils::IsK2Editor()
@@ -2431,7 +2431,7 @@ int CCommands::Search(SEARCH_DIRECTION direction)
 
 void CCommands::SetSearchDirection(SEARCH_DIRECTION direction)
 {
-//	CUtils::Log(_T("SetSearchDirection: %d"), direction);
+//	XK_LOG(_T("SetSearchDirection: %d"), direction);
 	if ((direction != FORWARD) && (direction != BACKWARD)) {
 		return;
 	}
@@ -2518,7 +2518,7 @@ void CCommands::SetSearchDirection(SEARCH_DIRECTION direction)
 			bDirection = GetDirectionBackwardKey();
 		}
 
-//		CUtils::Log(_T("aSetSearchDirection: Direction = %c, FindWhatKey = %c"), bDirection, GetFindWhatKey());
+//		XK_LOG(_T("aSetSearchDirection: Direction = %c, FindWhatKey = %c"), bDirection, GetFindWhatKey());
 		AdKduAu(bDirection, GetFindWhatKey());
 	}
 }
@@ -2630,7 +2630,7 @@ int CCommands::KillWord()
 	static int nWhiteSpace = 0;
 	switch (nStep) {
 	case 0:
-//		CUtils::Log(_T("M-d: 0"));
+//		XK_LOG(_T("M-d: 0"));
 		ClearNumericArgument();
 		szClipboardText.Empty();
 		nWhiteSpace = 0;
@@ -2640,34 +2640,34 @@ int CCommands::KillWord()
 		return Reset(GOTO_RECURSIVE);
 	case 1:
 		{
-//			CUtils::Log(_T("M-d: 1"));
+//			XK_LOG(_T("M-d: 1"));
 			nStep = 0;
 			CUtils::GetClipboardText(&szClipboardText);
 			int nWordEnd = szClipboardText.GetLength();
 			int nFirstSpace = szClipboardText.Find(_T(' '));
-//			CUtils::Log(_T("M-d: 1-1 _%s_%c"), szClipboardText, szClipboardText.GetAt(szClipboardText.GetLength() - 1));
+//			XK_LOG(_T("M-d: 1-1 _%s_%c"), szClipboardText, szClipboardText.GetAt(szClipboardText.GetLength() - 1));
 			if (nFirstSpace == 0) {
-//				CUtils::Log(_T("M-d: 1-1-1"));
+//				XK_LOG(_T("M-d: 1-1-1"));
 				nStep = 0;
 				return Reset(GOTO_RECURSIVE);
 			} else if (0 < nFirstSpace) {
-//				CUtils::Log(_T("M-d: 1-1-2"));
+//				XK_LOG(_T("M-d: 1-1-2"));
 				nWordEnd = nFirstSpace;	// (nFirstSpace + 1) - 1
 			}
 			int nFirstTab = szClipboardText.Find(_T('\t'));
 			if (nFirstTab == 0) {
-//				CUtils::Log(_T("M-d: 1-2-1"));
+//				XK_LOG(_T("M-d: 1-2-1"));
 				nStep = 0;
 				return Reset(GOTO_RECURSIVE);
 			} else if (0 < nFirstTab && nFirstTab < nWordEnd) {
-//				CUtils::Log(_T("M-d: 1-2-2"));
+//				XK_LOG(_T("M-d: 1-2-2"));
 				nWordEnd = nFirstTab;	// (nFirstTab + 1) - 1
 			}
 			if (nWordEnd == szClipboardText.GetLength()) {
-//				CUtils::Log(_T("M-d: 1-3-1"));
+//				XK_LOG(_T("M-d: 1-3-1"));
 				nStep = 4;
 			} else {
-//				CUtils::Log(_T("M-d: 1-3-2"));
+//				XK_LOG(_T("M-d: 1-3-2"));
 				CString szEndWhiteSpace;
 				nWhiteSpace = szClipboardText.GetLength() - nWordEnd;
 				szEndWhiteSpace = szClipboardText.Right(nWhiteSpace);
@@ -2678,13 +2678,13 @@ int CCommands::KillWord()
 			return Reset(GOTO_RECURSIVE);
 		}
 	case 2:
-//		CUtils::Log(_T("M-d: 2"));
+//		XK_LOG(_T("M-d: 2"));
 		nStep = 0;
 		CdKduCu('V');
 		nStep = 3;
 		return Reset(GOTO_RECURSIVE);
 	case 3:
-//		CUtils::Log(_T("M-d: 3"));
+//		XK_LOG(_T("M-d: 3"));
 		nStep = 0;
 		m_bDefaultNumericArgument = FALSE;
 		m_nNumericArgument = nWhiteSpace;
@@ -2692,13 +2692,13 @@ int CCommands::KillWord()
 		nStep = 4;
 		return Reset(GOTO_RECURSIVE);
 	case 4:
-//		CUtils::Log(_T("M-d: 4"));
+//		XK_LOG(_T("M-d: 4"));
 		nStep = 0;
 		CUtils::SetClipboardText(&szClipboardText);
 		nStep = 5;
 		return Reset(GOTO_RECURSIVE);
 	case 5:
-//		CUtils::Log(_T("M-d: 5"));
+//		XK_LOG(_T("M-d: 5"));
 		nStep = 0;
 		CXkeymacsDll::AddKillRing();
 		m_bSetMark = FALSE;
@@ -3020,12 +3020,12 @@ BYTE CCommands::GetDirectionBackwardKey()
 
 void CCommands::GetCaretPosition()
 {
-//	CUtils::Log(_T("GetClipboardTextLength = %d"), CUtils::GetClipboardTextLength());
+//	XK_LOG(_T("GetClipboardTextLength = %d"), CUtils::GetClipboardTextLength());
 
 	try {
 		POINT *pCaretPos = new POINT;
 		if (pCaretPos && GetCaretPos(pCaretPos)) {
-//			CUtils::Log(_T("x = %d, y = %d"), pCaretPos->x, pCaretPos->y);
+//			XK_LOG(_T("x = %d, y = %d"), pCaretPos->x, pCaretPos->y);
 			m_CaretPos.AddTail(pCaretPos);
 		} else {
 			delete pCaretPos;
@@ -3034,7 +3034,7 @@ void CCommands::GetCaretPosition()
 	}
 	catch (CMemoryException* e) {
 		e->Delete();
-//		CUtils::Log("GetCaretPosition: pCaretPos: 'new' threw an exception");
+//		XK_LOG("GetCaretPosition: pCaretPos: 'new' threw an exception");
 	}
 
 	try {
@@ -3044,10 +3044,10 @@ void CCommands::GetCaretPosition()
 			pScrollInfo->cbSize = sizeof(SCROLLINFO);
 			pScrollInfo->fMask = SIF_ALL;
 			if (GetScrollInfo(GetFocus(), SB_VERT, pScrollInfo)) {
-//				CUtils::Log(_T("page = %d, pos = %d, max = %d, min = %d, trackpos = %d"), pScrollInfo->nPage, pScrollInfo->nPos, pScrollInfo->nMax, pScrollInfo->nMin, pScrollInfo->nTrackPos);
+//				XK_LOG(_T("page = %d, pos = %d, max = %d, min = %d, trackpos = %d"), pScrollInfo->nPage, pScrollInfo->nPos, pScrollInfo->nMax, pScrollInfo->nMin, pScrollInfo->nTrackPos);
 				m_ScrollInfo.AddTail(pScrollInfo);
 			} else {
-//				CUtils::Log(_T("GetScrollInfo Error: %d"), GetLastError());
+//				XK_LOG(_T("GetScrollInfo Error: %d"), GetLastError());
 				delete pScrollInfo;
 				pScrollInfo = NULL;
 			}
@@ -3055,7 +3055,7 @@ void CCommands::GetCaretPosition()
 	}
 	catch (CMemoryException* e) {
 		e->Delete();
-//		CUtils::Log("GetCaretPosition: pScrollInfo: 'new' threw an exception");
+//		XK_LOG("GetCaretPosition: pScrollInfo: 'new' threw an exception");
 	}
 
 	try {
@@ -3068,7 +3068,7 @@ void CCommands::GetCaretPosition()
 	}
 	catch (CMemoryException* e) {
 		e->Delete();
-//		CUtils::Log("GetCaretPosition: pClipboardText: 'new' threw an exception");
+//		XK_LOG("GetCaretPosition: pClipboardText: 'new' threw an exception");
 	}
 }
 
@@ -3077,7 +3077,7 @@ BOOL CCommands::SetCaretPosition()
 	{
 //		TCHAR buf[0x100] = {'\0'};
 //		GetWindowText(GetForegroundWindow(), buf, sizeof(buf));
-//		CUtils::Log(buf);
+//		XK_LOG(buf);
 	}
 
 	if (!m_ScrollInfo.IsEmpty()) {
@@ -3102,7 +3102,7 @@ BOOL CCommands::SetCaretPosition()
 		POINT* pCaretPos = (POINT*)m_CaretPos.GetTail();
 		SetCaretPos(pCaretPos->x, pCaretPos->y);
 
-//		CUtils::Log(_T("set x = %d), y = %d", p->x, p->y);
+//		XK_LOG(_T("set x = %d), y = %d", p->x, p->y);
 
 		DeactivateMark();
 
@@ -3126,7 +3126,7 @@ BOOL CCommands::SetCaretPosition()
 		Kdu(VK_LEFT);
 	}
 
-//	CUtils::Log(_T("scrollInfo.GetCount() = %d, szFindText.GetLength() = %d"), scrollInfo.GetCount(), szFindText.GetLength());
+//	XK_LOG(_T("scrollInfo.GetCount() = %d, szFindText.GetLength() = %d"), scrollInfo.GetCount(), szFindText.GetLength());
 
 	if (!m_FindText.IsEmpty()) {
 		CString *pFindText = (CString *)m_FindText.GetTail();
@@ -3170,7 +3170,7 @@ GOTO CCommands::MoveCaret(BYTE bVk, BOOL bCtrl)
 	} static last;
 
 	const DWORD time = GetTickCount();
-//	CUtils::Log(_T("%d - %d = %d, %d, %d"), time, last.time, time - last.time, CXkeymacsDll::GetMaxKeyInterval(), CXkeymacsDll::GetAccelerate());
+//	XK_LOG(_T("%d - %d = %d, %d, %d"), time, last.time, time - last.time, CXkeymacsDll::GetMaxKeyInterval(), CXkeymacsDll::GetAccelerate());
 	if (CXkeymacsDll::GetAccelerate() && bVk == last.bVk && bCtrl == last.bCtrl && time - last.time < CXkeymacsDll::GetMaxKeyInterval()) {
 		NumericArgument(CXkeymacsDll::GetAccelerate());
 	}
@@ -3252,7 +3252,7 @@ int CCommands::Redo()
 
 int CCommands::TemporarilyDisableXKeymacs()
 {
-//	CUtils::Log(_T("SetTemporarilyDisableXKeymacs"));
+//	XK_LOG(_T("SetTemporarilyDisableXKeymacs"));
 	SetTemporarilyDisableXKeymacs(TRUE);
 	Reset();	// Why?
 	return Reset(GOTO_HOOK);
@@ -3303,7 +3303,7 @@ int CCommands::FindNext()
 
 int CCommands::SystemMenu(const CONSOLE_MENU nDown)
 {
-//	CUtils::Log(_T("SystemMenu"));
+//	XK_LOG(_T("SystemMenu"));
 	if (!CUtils::IsConsole()) {
 		return ERROR_SUCCESS;
 	}
@@ -3312,7 +3312,7 @@ int CCommands::SystemMenu(const CONSOLE_MENU nDown)
 	if (!GetWindowRect(GetForegroundWindow(), &consoleWindowRect)) {
 		return GetLastError();
 	}
-//	CUtils::Log(_T("t = %d, l = %d"), consoleWindowRect.top, consoleWindowRect.left);
+//	XK_LOG(_T("t = %d, l = %d"), consoleWindowRect.top, consoleWindowRect.left);
 
 	const POINT clickPoint = {consoleWindowRect.left + 5, consoleWindowRect.top + 5};
 	int rc = Click(&clickPoint);
@@ -3389,14 +3389,14 @@ int CCommands::TransposeLines()
 	switch (nStep) {
 	case 0:
 		nStep = 0;
-//		CUtils::Log(_T("C-x C-t: 0"));
+//		XK_LOG(_T("C-x C-t: 0"));
 		Kdu(VK_END);
 		CaptureClipboardData();
 		nStep = 1;
 		return Reset(GOTO_RECURSIVE);
 	case 1:
 		nStep = 0;
-//		CUtils::Log(_T("C-x C-t: 1"));
+//		XK_LOG(_T("C-x C-t: 1"));
 		if (!CopyNextCharacter()) {
 			return Reset(GOTO_DO_NOTHING);
 		}
@@ -3404,7 +3404,7 @@ int CCommands::TransposeLines()
 		return Reset(GOTO_RECURSIVE);
 	case 2:
 		nStep = 0;
-//		CUtils::Log(_T("C-x C-t: 2"));
+//		XK_LOG(_T("C-x C-t: 2"));
 		Su();
 		if (CUtils::IsEOF()) {
 			Kdu(VK_END, VK_RETURN, VK_UP, VK_END);
@@ -3414,7 +3414,7 @@ int CCommands::TransposeLines()
 		return Reset(GOTO_RECURSIVE);
 	case 3:
 		nStep = 0;
-//		CUtils::Log(_T("C-x C-t: 3"));
+//		XK_LOG(_T("C-x C-t: 3"));
 		if (!CopyBackCharacter()) {
 			return Reset(GOTO_DO_NOTHING);
 		}
@@ -3422,11 +3422,11 @@ int CCommands::TransposeLines()
 		return Reset(GOTO_RECURSIVE);
 	case 4:
 		nStep = 0;
-//		CUtils::Log(_T("C-x C-t: 4"));
+//		XK_LOG(_T("C-x C-t: 4"));
 		Su();
 		if (CUtils::IsTOF()) {	// TOF
 			Kdu(VK_DOWN, VK_END);
-//			CUtils::Log(_T("C-x C-t: TOF"));
+//			XK_LOG(_T("C-x C-t: TOF"));
 			nStep = 5;
 		} else {
 			nStep = 7;
@@ -3434,7 +3434,7 @@ int CCommands::TransposeLines()
 		return Reset(GOTO_RECURSIVE);
 	case 5:
 		nStep = 0;
-//		CUtils::Log(_T("C-x C-t: 5"));
+//		XK_LOG(_T("C-x C-t: 5"));
 		if (!CopyNextCharacter()) {
 			return Reset(GOTO_DO_NOTHING);
 		}
@@ -3442,17 +3442,17 @@ int CCommands::TransposeLines()
 		return Reset(GOTO_RECURSIVE);
 	case 6:
 		nStep = 0;
-//		CUtils::Log(_T("C-x C-t: 6"));
+//		XK_LOG(_T("C-x C-t: 6"));
 		Su();
 		if (CUtils::IsEOF()) {
 			Kdu(VK_END, VK_RETURN, VK_UP, VK_END);
-//			CUtils::Log(_T("C-x C-t: EOF2"));
+//			XK_LOG(_T("C-x C-t: EOF2"));
 		}
 		nStep = 7;
 		return Reset(GOTO_RECURSIVE);
 	case 7:
 		nStep = 0;
-//		CUtils::Log(_T("C-x C-t: 7"));
+//		XK_LOG(_T("C-x C-t: 7"));
 		Kdu(VK_UP, VK_HOME);
 		SdKduSu(VK_DOWN);
 		CdKduCu('X');
@@ -3460,7 +3460,7 @@ int CCommands::TransposeLines()
 		return Reset(GOTO_RECURSIVE);
 	case 8:
 		nStep = 0;
-//		CUtils::Log(_T("C-x C-t: 8"));
+//		XK_LOG(_T("C-x C-t: 8"));
 		Su();
 		Kdu(VK_DOWN);
 		CdKduCu('V');
@@ -3468,7 +3468,7 @@ int CCommands::TransposeLines()
 		return Reset(GOTO_RECURSIVE);
 	case 9:
 		nStep = 0;
-//		CUtils::Log(_T("C-x C-t: 9"));
+//		XK_LOG(_T("C-x C-t: 9"));
 		RestoreClipboardData();
 		break;
 	}
@@ -3477,51 +3477,51 @@ int CCommands::TransposeLines()
 
 void CCommands::CaptureClipboardData(const int nID, const BOOL bTextOnly)
 {
-//	CUtils::Log("CaptureClipboardData: 1");
+//	XK_LOG("CaptureClipboardData: 1");
 	{
 		int nSize = nID + 1;
 		if (m_oClipboardData.GetSize() < nSize) {
-//			CUtils::Log("CaptureClipboardData: 2");
+//			XK_LOG("CaptureClipboardData: 2");
 			try {
 				m_oClipboardData.SetSize(nSize);
 			}
 			catch (CMemoryException* e) {
 				e->Delete();
-//				CUtils::Log("CaptureClipboardData: SetSize() threw an exception");
+//				XK_LOG("CaptureClipboardData: SetSize() threw an exception");
 			}
 		}
 	}
 
-//	CUtils::Log("CaptureClipboardData: 3");
+//	XK_LOG("CaptureClipboardData: 3");
 	if (!m_oClipboardData[nID]) {
-//		CUtils::Log("CaptureClipboardData: 4");
+//		XK_LOG("CaptureClipboardData: 4");
 		try {
 			CClipboardSnap *pSnap = new CClipboardSnap;
 			if (!pSnap) {
-//				CUtils::Log("CaptureClipboardData: 5");
+//				XK_LOG("CaptureClipboardData: 5");
 				return;
 			}
 			m_oClipboardData.SetAt(nID, pSnap);
 		}
 		catch (CMemoryException* e) {
 			e->Delete();
-//			CUtils::Log("CaptureClipboardData: 'new' threw an exception");
+//			XK_LOG("CaptureClipboardData: 'new' threw an exception");
 		}
 	}
 
-//	CUtils::Log("CaptureClipboardData: 6: nID=%d, size=%d", nID, m_oClipboardData.GetSize());
+//	XK_LOG("CaptureClipboardData: 6: nID=%d, size=%d", nID, m_oClipboardData.GetSize());
 	BOOL bCapture = m_oClipboardData[nID]->Capture(bTextOnly);
-//	CUtils::Log("CaptureClipboardData: 7");
+//	XK_LOG("CaptureClipboardData: 7");
 	Sleep(0);	// for OpenOffice
 	bCapture = m_oClipboardData[nID]->Capture(bTextOnly);	// for "office drawing shape format". Can CClipboardSnap care this problem?
 
-//	CUtils::Log("CaptureClipboardData: 8");
+//	XK_LOG("CaptureClipboardData: 8");
 	if (!bCapture) {
-//		CUtils::Log(_T("Can not Capture in CaptureClipboardData"));
+//		XK_LOG(_T("Can not Capture in CaptureClipboardData"));
 		delete m_oClipboardData[nID];
-//		CUtils::Log("CaptureClipboardData: 9");
+//		XK_LOG("CaptureClipboardData: 9");
 		m_oClipboardData.SetAt(nID, NULL);
-//		CUtils::Log("CaptureClipboardData: 10");
+//		XK_LOG("CaptureClipboardData: 10");
 	}
 }
 
@@ -3552,7 +3552,7 @@ void CCommands::PrintFunctionName(int (*nFunctionPointer)())
 {
 	for (int nCommandID = 1; nCommandID < sizeof(Commands) / sizeof(Commands[0]); ++nCommandID) {
 		if (Commands[nCommandID].fCommand == nFunctionPointer) {
-			CUtils::Log(_T("m_LastCommand: %s"), Commands[nCommandID].szCommandName);
+			XK_LOG(_T("m_LastCommand: %s"), Commands[nCommandID].szCommandName);
 		}
 	}
 }
@@ -3676,21 +3676,21 @@ int CCommands::TransposeWords()
 	switch (nStep) {
 	case 0:
 		nStep = 0;
-//		CUtils::Log(_T("M-t: 0"));
+//		XK_LOG(_T("M-t: 0"));
 		CdKduCu(VK_LEFT);
 		CaptureClipboardData();
 		nStep = 1;
 		return Reset(GOTO_RECURSIVE);
 	case 1:
 		nStep = 0;
-//		CUtils::Log(_T("M-t: 1"));
+//		XK_LOG(_T("M-t: 1"));
 		CdSdKduSuCu(VK_RIGHT);
 		CdKduCu('X');
 		nStep = 2;
 		return Reset(GOTO_RECURSIVE);
 	case 2:
 		nStep = 0;
-//		CUtils::Log(_T("M-t: 2"));
+//		XK_LOG(_T("M-t: 2"));
 		Su();
 		CdKduCu(VK_RIGHT);
 		CdKduCu('V');
@@ -3699,7 +3699,7 @@ int CCommands::TransposeWords()
 		return Reset(GOTO_RECURSIVE);
 	case 3:
 		nStep = 0;
-//		CUtils::Log(_T("M-t: 3"));
+//		XK_LOG(_T("M-t: 3"));
 		RestoreClipboardData();
 		break;
 	}
@@ -3713,13 +3713,13 @@ BOOL CCommands::GetCaretPos(LPPOINT lpPoint)
 		IMECHARPOSITION ImeCharPosition = {sizeof(IMECHARPOSITION)};
 
 		CallWindowProc((WNDPROC)GetWindowLong(GetFocus(), GWL_WNDPROC), GetFocus(), WM_IME_REQUEST, IMR_QUERYCHARPOSITION, (LPARAM)&ImeCharPosition);
-//		CUtils::Log(_T("ImeCharPosition: rc = %d, x = %d, y = %d"), 0, ImeCharPosition.pt.x, ImeCharPosition.pt.y);
+//		XK_LOG(_T("ImeCharPosition: rc = %d, x = %d, y = %d"), 0, ImeCharPosition.pt.x, ImeCharPosition.pt.y);
 
 		ScreenToClient(GetFocus(), &ImeCharPosition.pt);
-//		CUtils::Log(_T("ScreenToClient: rc = %d, x = %d, y = %d"), 0, ImeCharPosition.pt.x, ImeCharPosition.pt.y);
+//		XK_LOG(_T("ScreenToClient: rc = %d, x = %d, y = %d"), 0, ImeCharPosition.pt.x, ImeCharPosition.pt.y);
 
 		*lpPoint = ImeCharPosition.pt;
-//		CUtils::Log(_T("x = %d, y = %d"), lpPoint->x, lpPoint->y);
+//		XK_LOG(_T("x = %d, y = %d"), lpPoint->x, lpPoint->y);
 
 		return TRUE;
 	}
@@ -3736,15 +3736,15 @@ LRESULT CCommands::VScroll(UINT nSBCode, const int nTimes)
 
 		POINT righttop = {ClientRect.right, ClientRect.top};
 		ClientToScreen(GetFocus(), &righttop);
-//		CUtils::Log(_T("righttop: x = %d, y = %d"), righttop.x, righttop.y);
+//		XK_LOG(_T("righttop: x = %d, y = %d"), righttop.x, righttop.y);
 
 		POINT rightbottom = {ClientRect.right, ClientRect.bottom};
 		ClientToScreen(GetFocus(), &rightbottom);
-//		CUtils::Log(_T("rightbottom: x = %d, y = %d"), rightbottom.x, rightbottom.y);
+//		XK_LOG(_T("rightbottom: x = %d, y = %d"), rightbottom.x, rightbottom.y);
 
 //		POINT CursorPos = {'\0'};
 //		GetCursorPos(&CursorPos);
-//		CUtils::Log(_T("VScroll: x = %d, y = %d"), CursorPos.x, CursorPos.y);
+//		XK_LOG(_T("VScroll: x = %d, y = %d"), CursorPos.x, CursorPos.y);
 
 		POINT scrollpos = {'\0'};
 
@@ -3794,7 +3794,7 @@ int CCommands::FillParagraph()
 	static int nStep = 0;
 	switch (nStep) {
 	case 0:		// Clear Selection
-//		CUtils::Log(_T("M-q: 0"));
+//		XK_LOG(_T("M-q: 0"));
 		nStep = 0;
 
 		CaptureClipboardData();
@@ -3807,7 +3807,7 @@ int CCommands::FillParagraph()
 		nStep = 1;
 		return Reset(GOTO_RECURSIVE);
 	case 1:		// Copy previous line
-//		CUtils::Log(_T("M-q: 1"));
+//		XK_LOG(_T("M-q: 1"));
 		nStep = 0;
 
 		if (!CopyPreviousLine()) {
@@ -3817,14 +3817,14 @@ int CCommands::FillParagraph()
 		nStep = 2;
 		return Reset(GOTO_RECURSIVE);
 	case 2:		// Check previous line to find TOP (top of paragraph)
-//		CUtils::Log(_T("M-q: 2"));
+//		XK_LOG(_T("M-q: 2"));
 		nStep = 0;
 
 		CUtils::GetClipboardText(&szClipboardText);
-//		CUtils::Log(_T("M-q: 2-1: _%s_"), szClipboardText);
+//		XK_LOG(_T("M-q: 2-1: _%s_"), szClipboardText);
 		if (szClipboardText.IsEmpty()) {
 			// TOF
-//			CUtils::Log(_T("M-q: 2: TOF"));
+//			XK_LOG(_T("M-q: 2: TOF"));
 			Kdu(VK_HOME);
 			nStep = 3;
 		} else if (szClipboardText == _T("\r\n")
@@ -3834,20 +3834,20 @@ int CCommands::FillParagraph()
 			// UNIX: LF "\n"
 			// WINDOWS: CR LF "\r\n"
 			// MAC: CR "\r"
-//			CUtils::Log(_T("M-q: 2: TOP"));
+//			XK_LOG(_T("M-q: 2: TOP"));
 			Kdu(VK_DOWN);
 			nStep = 3;
 		} else {
 			// middle of paragraph
-//			CUtils::Log(_T("M-q: 2: MOP_%d_"), szClipboardText.GetLength());
-//			CUtils::Log(_T("M-q: 2: MOP_%c(%d)%c(%d)"), szClipboardText.GetAt(0), szClipboardText.GetAt(0), szClipboardText.GetAt(1), szClipboardText.GetAt(1));
+//			XK_LOG(_T("M-q: 2: MOP_%d_"), szClipboardText.GetLength());
+//			XK_LOG(_T("M-q: 2: MOP_%c(%d)%c(%d)"), szClipboardText.GetAt(0), szClipboardText.GetAt(0), szClipboardText.GetAt(1), szClipboardText.GetAt(1));
 			Kdu(VK_HOME);
 			nStep = 1;
 		}
 
 		return Reset(GOTO_RECURSIVE);
 	case 3:		// Go to EOL to copy a current line at the next step
-//		CUtils::Log(_T("M-q: 3"));
+//		XK_LOG(_T("M-q: 3"));
 		nStep = 0;
 
 		Kdu(VK_END);
@@ -3855,7 +3855,7 @@ int CCommands::FillParagraph()
 		nStep = 4;
 		return Reset(GOTO_RECURSIVE);
 	case 4:		// Copy a current line
-//		CUtils::Log(_T("M-q: 4"));
+//		XK_LOG(_T("M-q: 4"));
 		nStep = 0;
 
 		if (!CopyCurrentLine()) {
@@ -3865,7 +3865,7 @@ int CCommands::FillParagraph()
 		nStep = 5;
 		return Reset(GOTO_RECURSIVE);
 	case 5:		// Just release shift
-//		CUtils::Log(_T("M-q: 5"));
+//		XK_LOG(_T("M-q: 5"));
 		nStep = 0;
 
 		ReleaseKey(VK_SHIFT);
@@ -3873,26 +3873,26 @@ int CCommands::FillParagraph()
 		nStep = 6;
 		return Reset(GOTO_RECURSIVE);
 	case 6:		// Check current line and fill paragraph
-//		CUtils::Log(_T("M-q: 6"));
+//		XK_LOG(_T("M-q: 6"));
 		nStep = 0;
 
 		CUtils::GetClipboardText(&szClipboardText);
 		if (szClipboardText.GetLength() == nOldLineLength + 1) {
-//			CUtils::Log(_T("M-q: 6-1 Finished"));
+//			XK_LOG(_T("M-q: 6-1 Finished"));
 			Kdu(VK_END, VK_BACK, VK_RETURN);
 			nStep = 8;
 		} else if (szClipboardText.GetLength() < nFillColumn) {
-//			CUtils::Log(_T("M-q: 6-2 This line is too small"));
+//			XK_LOG(_T("M-q: 6-2 This line is too small"));
 			Kdu(VK_END, VK_SPACE, VK_DELETE, VK_HOME);
 			nStep = 3;
 		} else {
-//			CUtils::Log(_T("M-q: 6-3 %d_%s_%d"), szClipboardText.Left(nFillColumn).GetLength(), szClipboardText.Left(nFillColumn), szClipboardText.Left(nFillColumn).ReverseFind(_T(' ')));
+//			XK_LOG(_T("M-q: 6-3 %d_%s_%d"), szClipboardText.Left(nFillColumn).GetLength(), szClipboardText.Left(nFillColumn), szClipboardText.Left(nFillColumn).ReverseFind(_T(' ')));
 			const int offset = szClipboardText.Left(nFillColumn).ReverseFind(_T(' '));
 			if (offset == 0) {
-//				CUtils::Log(_T("M-q: 6-3-1 TOL is space"));
+//				XK_LOG(_T("M-q: 6-3-1 TOL is space"));
 				Kdu(VK_DELETE);
 			} else if (0 < offset) {
-//				CUtils::Log(_T("M-q: 6-3-2"));
+//				XK_LOG(_T("M-q: 6-3-2"));
 				ReleaseKey(VK_MENU); // FIXME
 				for (int i = 0; i < offset; ++i) {
 					Kdu(VK_RIGHT);
@@ -3900,7 +3900,7 @@ int CCommands::FillParagraph()
 				nStep = 7;
 				return Reset(GOTO_RECURSIVE);
 			} else {
-//				CUtils::Log(_T("M-q: 6-3-3 No space in first fill-column"));
+//				XK_LOG(_T("M-q: 6-3-3 No space in first fill-column"));
 				const int offset = szClipboardText.Find(_T(' '));
 				if (offset < 0) {
 					Kdu(VK_HOME, VK_DOWN);
@@ -3919,7 +3919,7 @@ int CCommands::FillParagraph()
 
 		return Reset(GOTO_RECURSIVE);
 	case 7:		// Linefeed
-//		CUtils::Log(_T("M-q: 7"));
+//		XK_LOG(_T("M-q: 7"));
 		nStep = 0;
 
 		Kdu(VK_RETURN, VK_DELETE);
@@ -3927,7 +3927,7 @@ int CCommands::FillParagraph()
 		nStep = 3;
 		return Reset(GOTO_RECURSIVE);
 	case 8:		// Restore clipboard data
-//		CUtils::Log(_T("M-q: 8"));
+//		XK_LOG(_T("M-q: 8"));
 		nStep = 0;
 
 		RestoreClipboardData();
@@ -4118,7 +4118,7 @@ BOOL CCommands::CutFollowingWord()
 // M-x: execute-extended-command
 int CCommands::ExecuteExtendedCommand()
 {
-//	CUtils::Log(_T("ExecuteExtendedCommand"));
+//	XK_LOG(_T("ExecuteExtendedCommand"));
 	bM_x(TRUE);
 	return Reset(GOTO_HOOKX);
 }
