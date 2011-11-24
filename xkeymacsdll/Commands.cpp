@@ -819,16 +819,8 @@ int CCommands::KillLine(BOOL bAllFormat, int (*pCommand)())
 			Kdu(VK_RIGHT);
 		}
 
-<<<<<<< variant A
 		CUtils::GetClipboardText(szClipboardText);
 //		CUtils::Log(_T("%x, %s"), szClipboardText.GetAt(0), szClipboardText);
->>>>>>> variant B
-		CUtils::GetClipboardText(&szClipboardText);
-		XK_LOG(_T("%x, %s"), szClipboardText.GetAt(0), szClipboardText);
-####### Ancestor
-		CUtils::GetClipboardText(&szClipboardText);
-//		CUtils::Log(_T("%x, %s"), szClipboardText.GetAt(0), szClipboardText);
-======= end
 
 		if (szClipboardText.IsEmpty()) {	// EOF
 			XK_LOG(_T("C-k: EOF"));
