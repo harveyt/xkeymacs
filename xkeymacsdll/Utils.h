@@ -11,6 +11,13 @@
 
 #include "StdAfx.h"
 
+// #define ENABLE_LOG
+#ifdef ENABLE_LOG
+#define XK_LOG(fmt,...) CUtils::Log(fmt, __VA_ARGS__)
+#else
+#define XK_LOG(fmt,...) ((void)0)
+#endif
+
 class AFX_EXT_CLASS CUtils  
 {
 public:
