@@ -71,8 +71,8 @@ static const KeyName KeyNames[] = {
 	{VK_KANJI,		_T("Kanji")},	//	{VK_HANJA,		"Hanja"},
 	{0x1a,			_T("Undefined")},
 	{VK_ESCAPE,		_T("Esc")},
-	{VK_CONVERT,	_T("Convert")},		// •ÏŠ·
-	{VK_NONCONVERT,	_T("Nonconvert")},	// –³•ÏŠ·
+	{VK_CONVERT,	_T("Convert")},		// å¤‰æ›
+	{VK_NONCONVERT,	_T("Nonconvert")},	// ç„¡å¤‰æ›
 	{VK_ACCEPT,		_T("Accept")},
 	{VK_MODECHANGE,	_T("Mode change")},
 	{VK_SPACE,		_T("Space")},
@@ -286,11 +286,11 @@ static const KeyName KeyNames[] = {
 	{0xed,			_T("OEM specific")},
 	{0xee,			_T("OEM specific")},
 	{0xef,			_T("OEM specific")},
-	{0xf0,			_T("Eisu")},					// ‰p”
+	{0xf0,			_T("Eisu")},					// è‹±æ•°
 	{0xf1,			_T("OEM specific")},
-	{0xf2,			_T("Hiragana")},				// ‚Ğ‚ç‚ª‚È
-	{0xf3,			_T("Hankaku/Zenkaku 0xf3")},	// "”¼Šp/‘SŠp"
-	{0xf4,			_T("Hankaku/Zenkaku 0xf4")},	// "”¼Šp/‘SŠp"
+	{0xf2,			_T("Hiragana")},				// ã²ã‚‰ãŒãª
+	{0xf3,			_T("Hankaku/Zenkaku 0xf3")},	// "åŠè§’/å…¨è§’"
+	{0xf4,			_T("Hankaku/Zenkaku 0xf4")},	// "åŠè§’/å…¨è§’"
 	{0xf5,			_T("OEM specific")},
 	{VK_ATTN,		_T("Attn")},
 	{VK_CRSEL,		_T("CrSel")},

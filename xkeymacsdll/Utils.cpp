@@ -20,20 +20,20 @@ BOOL CUtils::GetFindDialogTitle(CString *szDialogTitle)
 		szDialogTitle->Format(_T("%s"), buf);
 	}
 
-	if (!szDialogTitle->Compare(_T("åüçı"))					// notepad, wordpad, IE, regedit, 
+	if (!szDialogTitle->Compare(_T("Ê§úÁ¥¢"))					// notepad, wordpad, IE, regedit, 
 														// Excel, Front Page, PowerPoint, Acrobat Reader, IBM HPB
 	 || !szDialogTitle->Compare(_T("Find"))					// notepad, Outlook, Outlook Express, Opera
 	 || !szDialogTitle->Compare(_T("Find in this Page"))	// Mozilla
 	 || !szDialogTitle->Compare(_T("Find/Replace"))			// Eclipse
-	 || !szDialogTitle->Compare(_T("ñ{ï∂ì‡åüçı"))			// Becky!
-	 || !szDialogTitle->Compare(_T("ÉÅÅ[Éãåüçı"))			// Becky!
-	 || !szDialogTitle->Compare(_T("ï∂éöóÒÇÃåüçı"))			// M$ VC++
-	 || !szDialogTitle->Compare(_T("åüçıÇ∆íuä∑"))			// M$ Word, 123
-	 || !szDialogTitle->Compare(_T("ï∂èëÇÃÉeÉLÉXÉgÇÃåüçı"))	// Lotus Notes
-	 || !szDialogTitle->Compare(_T("Ç±ÇÃÉyÅ[ÉWÇåüçı"))		// Netscape 6
-	 || !szDialogTitle->Compare(_T("ï∂éöóÒåüçı"))			// Dana
-	 || !szDialogTitle->Compare(_T("åüçı/íuä∑"))			// PHP Editor
-	 || !szDialogTitle->Compare(_T("íuä∑"))
+	 || !szDialogTitle->Compare(_T("Êú¨ÊñáÂÜÖÊ§úÁ¥¢"))			// Becky!
+	 || !szDialogTitle->Compare(_T("„É°„Éº„É´Ê§úÁ¥¢"))			// Becky!
+	 || !szDialogTitle->Compare(_T("ÊñáÂ≠óÂàó„ÅÆÊ§úÁ¥¢"))			// M$ VC++
+	 || !szDialogTitle->Compare(_T("Ê§úÁ¥¢„Å®ÁΩÆÊèõ"))			// M$ Word, 123
+	 || !szDialogTitle->Compare(_T("ÊñáÊõ∏„ÅÆ„ÉÜ„Ç≠„Çπ„Éà„ÅÆÊ§úÁ¥¢"))	// Lotus Notes
+	 || !szDialogTitle->Compare(_T("„Åì„ÅÆ„Éö„Éº„Ç∏„ÇíÊ§úÁ¥¢"))		// Netscape 6
+	 || !szDialogTitle->Compare(_T("ÊñáÂ≠óÂàóÊ§úÁ¥¢"))			// Dana
+	 || !szDialogTitle->Compare(_T("Ê§úÁ¥¢/ÁΩÆÊèõ"))			// PHP Editor
+	 || !szDialogTitle->Compare(_T("ÁΩÆÊèõ"))
 	 || !szDialogTitle->Compare(_T("Replace"))) {
 		return TRUE;
 	}
@@ -230,8 +230,8 @@ void CUtils::SetCorrectApplicationName(LPTSTR szApplicationName, LPTSTR szWindow
 		int i = 0;
 		static LPCTSTR const szPromptName[] = {_T("Command Prompt"), _T("Mark Command Prompt"), _T("Select Command Prompt"), _T("MS-DOS Prompt"),
 											   _T("Visual Studio .NET Command Prompt"), _T("Visual Studio .NET 2003 Command Prompt"),
-											   _T("ÉRÉ}ÉìÉh ÉvÉçÉìÉvÉg"), _T("îÕàÕéwíË ÉRÉ}ÉìÉh ÉvÉçÉìÉvÉg"), _T("ëIë ÉRÉ}ÉìÉh ÉvÉçÉìÉvÉg"), _T("MS-DOS ÉvÉçÉìÉvÉg"),
-											   _T("Visual Studio .NET ÉRÉ}ÉìÉh ÉvÉçÉìÉvÉg"), _T("Visual Studio .NET 2003 ÉRÉ}ÉìÉh ÉvÉçÉìÉvÉg")};
+											   _T("„Ç≥„Éû„É≥„Éâ „Éó„É≠„É≥„Éó„Éà"), _T("ÁØÑÂõ≤ÊåáÂÆö „Ç≥„Éû„É≥„Éâ „Éó„É≠„É≥„Éó„Éà"), _T("ÈÅ∏Êäû „Ç≥„Éû„É≥„Éâ „Éó„É≠„É≥„Éó„Éà"), _T("MS-DOS „Éó„É≠„É≥„Éó„Éà"),
+											   _T("Visual Studio .NET „Ç≥„Éû„É≥„Éâ „Éó„É≠„É≥„Éó„Éà"), _T("Visual Studio .NET 2003 „Ç≥„Éû„É≥„Éâ „Éó„É≠„É≥„Éó„Éà")};
 		static LPCTSTR const szPromptPath[] = {_T("system32\\cmd.exe")};	// WindowText of Command Prompt is sometimes this style. But MS-DOS Prompt's is always MS-DOS Prompt.
 		static LPCTSTR const szSeparator = _T(" - ");
 
@@ -328,7 +328,11 @@ void CUtils::SetCorrectApplicationName(LPTSTR szApplicationName, LPTSTR szWindow
 
 void CUtils::SetApplicationName(BOOL bImeComposition)
 {
-//	CUtils::Log(_T("SetApplicationName: start"));
+	// TODO: Ignore IME composition, don't need it, and it's confusing Emacs.
+	if (bImeComposition)
+		return;
+
+	XK_LOG(_T("SetApplicationName: start"));
 
 	memset(m_szApplicationName, 0, sizeof(m_szApplicationName));
 
@@ -338,26 +342,29 @@ void CUtils::SetApplicationName(BOOL bImeComposition)
 			if (!ImmGetIMEFileName(hKL, m_szIMEName, sizeof(m_szIMEName))) {
 				_tcsncpy_s(m_szIMEName, _T("IME"), _TRUNCATE);	// IDS_IME_FILE_NAME
 			}
-//			CUtils::Log(_T("SetApplicationName: m_szIMEName == %s"), m_szIMEName);
+			XK_LOG(_T("SetApplicationName: m_szIMEName == %s"), m_szIMEName);
 		}
 	}
 
 	if (bImeComposition) {
-//		CUtils::Log(_T("SetApplicationName: bImeComposition"));
+		XK_LOG(_T("SetApplicationName: bImeComposition"));
 
 		HKL hKL = GetKeyboardLayout(0);
 		if (ImmIsIME(hKL)) {
+			XK_LOG(_T("SetApplicationName: bImeComposition 1"));
 			if (!ImmGetIMEFileName(hKL, m_szApplicationName, sizeof(m_szApplicationName))) {
 				_tcsncpy_s(m_szApplicationName, m_szIMEName, _TRUNCATE);
 			}
 			_tcsncpy_s(m_szIMEName, m_szApplicationName, sizeof(m_szIMEName));
 		} else {
+			XK_LOG(_T("SetApplicationName: bImeComposition 4"));
+
 			// ImmIsIME return 0 on Word2002, Excel2002, etc. with IME2002, so...
 			// _tcsncpy(m_szApplicationName, _T("imjp81.ime"), sizeof(m_szApplicationName));
 			_tcsncpy_s(m_szApplicationName, m_szIMEName, _TRUNCATE);
 		}
 	} else {
-//		CUtils::Log(_T("SetApplicationName: appication (%s)"), m_szApplicationName);
+		XK_LOG(_T("SetApplicationName: appication (%s)"), m_szApplicationName);
 
 		GetModuleFileName(NULL, m_szApplicationName, sizeof(m_szApplicationName));
 		CString szFn(m_szApplicationName);
@@ -365,10 +372,10 @@ void CUtils::SetApplicationName(BOOL bImeComposition)
 		ZeroMemory(m_szApplicationName, sizeof(m_szApplicationName));
 		_tcscpy_s(m_szApplicationName, szFn);
 
-//		CUtils::Log(_T("SetApplicationName: appication [%s]"), m_szApplicationName);
+		XK_LOG(_T("SetApplicationName: appication [%s]"), m_szApplicationName);
 
 		if (IsConsole()) {
-//			CUtils::Log(_T("SetApplicationName: console"));
+			XK_LOG(_T("SetApplicationName: console"));
 
 			memset(m_szApplicationName, 0, sizeof(m_szApplicationName));
 			_tcscpy_s(m_szApplicationName, _T("CMD.exe"));
@@ -381,13 +388,14 @@ void CUtils::SetApplicationName(BOOL bImeComposition)
 			SetCorrectApplicationName(m_szApplicationName, szWindowText);
 		}
 		if (!_tcsicmp(m_szApplicationName, _T("Cygwin.exe"))) {
-//			CUtils::Log(_T("SetApplicationName: cygwin"));
+			XK_LOG(_T("SetApplicationName: cygwin"));
 
 			memset(m_szApplicationName, 0, sizeof(m_szApplicationName));
 			_tcscpy_s(m_szApplicationName, _T("bash.exe"));
 		}
-//		CUtils::Log(_T("name: %s"), m_szApplicationName);
 	}
+
+	XK_LOG(_T("SetApplicationName: name=%s"), m_szApplicationName);
 }
 
 BOOL CUtils::OpenClipboard()

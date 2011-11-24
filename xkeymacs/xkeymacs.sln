@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xkeymacs", "xkeymacs.vcproj", "{9E96B7DD-657F-46BB-91C7-4F2C0A26F75B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0C795582-65E5-430D-8852-E9689D5958C8} = {0C795582-65E5-430D-8852-E9689D5958C8}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xkeymacsdll", "..\xkeymacsdll\xkeymacsdll.vcproj", "{0C795582-65E5-430D-8852-E9689D5958C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E96B7DD-657F-46BB-91C7-4F2C0A26F75B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9E96B7DD-657F-46BB-91C7-4F2C0A26F75B}.Debug|Win32.Build.0 = Debug|Win32
+		{9E96B7DD-657F-46BB-91C7-4F2C0A26F75B}.Release|Win32.ActiveCfg = Release|Win32
+		{9E96B7DD-657F-46BB-91C7-4F2C0A26F75B}.Release|Win32.Build.0 = Release|Win32
+		{0C795582-65E5-430D-8852-E9689D5958C8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0C795582-65E5-430D-8852-E9689D5958C8}.Debug|Win32.Build.0 = Debug|Win32
+		{0C795582-65E5-430D-8852-E9689D5958C8}.Release|Win32.ActiveCfg = Release|Win32
+		{0C795582-65E5-430D-8852-E9689D5958C8}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

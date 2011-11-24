@@ -1,4 +1,4 @@
-// ClipboardFormatSnap.cpp: CClipboardFormatSnap ƒNƒ‰ƒX‚ÌƒCƒ“ƒvƒŠƒƒ“ƒe[ƒVƒ‡ƒ“
+// ClipboardFormatSnap.cpp: CClipboardFormatSnap ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ãƒ—ãƒªãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -13,7 +13,7 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 //////////////////////////////////////////////////////////////////////
-// \’z/Á–Å
+// æ§‹ç¯‰/æ¶ˆæ»…
 //////////////////////////////////////////////////////////////////////
 
 CClipboardFormatSnap::CClipboardFormatSnap() :
@@ -26,7 +26,7 @@ CClipboardFormatSnap::~CClipboardFormatSnap()
 }
 
 //////////////////////////////////////////////////////////////////////
-// ƒRƒs[
+// ã‚³ãƒ”ãƒ¼
 //////////////////////////////////////////////////////////////////////
 
 CClipboardFormatSnap::CClipboardFormatSnap( const CClipboardFormatSnap& rhs ) :
@@ -234,7 +234,7 @@ const CClipboardFormatSnap& CClipboardFormatSnap::Merge( CClipboardFormatSnap& l
 */
 
 //////////////////////////////////////////////////////////////////////
-// ‘€ì
+// æ“ä½œ
 //////////////////////////////////////////////////////////////////////
 
 BOOL CClipboardFormatSnap::Capture( int nFormat )
@@ -243,18 +243,18 @@ BOOL CClipboardFormatSnap::Capture( int nFormat )
 	m_nFormat = nFormat;
 
 	//
-	// (0) DataObject‚Íæ‚èœ‚­(4byte‚Ìƒ|ƒCƒ“ƒ^‚µ‚©“¾‚ç‚ê‚È‚¢‚½‚ß)
+	// (0) DataObjectã¯å–ã‚Šé™¤ã(4byteã®ãƒã‚¤ãƒ³ã‚¿ã—ã‹å¾—ã‚‰ã‚Œãªã„ãŸã‚)
 	//
 	if( GetFormatName( nFormat ) == _T("DataObject") ) return FALSE;
 
 	//
-	// (0.5) Excel ã‚Å CF_METAFILEPICT/CF_ENHMETAFILE ‚É GetClipboardData ‚·‚é‚Æ "}‚ª‘å‚«‚·‚¬‚Ü‚·B" ‚Æ‚¢‚¤ƒGƒ‰[‚ª•\¦‚³‚ê‚éB
+	// (0.5) Excel ä¸Šã§ CF_METAFILEPICT/CF_ENHMETAFILE ã« GetClipboardData ã™ã‚‹ã¨ "å›³ãŒå¤§ãã™ãã¾ã™ã€‚" ã¨ã„ã†ã‚¨ãƒ©ãƒ¼ãŒè¡¨ç¤ºã•ã‚Œã‚‹ã€‚
 	//
 //	CUtils::Log("CClipboardFormatSnap::Capture: 0.5");
 	if( CUtils::IsExcel() && ( nFormat == CF_METAFILEPICT || nFormat == CF_ENHMETAFILE ) ) return FALSE;
 
 	//
-	// (1) Clipboard“à‚Ìƒƒ‚ƒŠƒuƒƒbƒNæ“¾
+	// (1) Clipboardå†…ã®ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯å–å¾—
 	//
 //	CUtils::Log("CClipboardFormatSnap::Capture: 1");
 	HANDLE hData    = GetClipboardData( nFormat ); if( hData == NULL ) return FALSE;
@@ -264,7 +264,7 @@ BOOL CClipboardFormatSnap::Capture( int nFormat )
 	size_t nLenData = GlobalSize( hData );         if( nLenData == 0 ) return FALSE;
 
 	//
-	// (2) ƒ[ƒJƒ‹ƒIƒuƒWƒFƒNƒg‚Öƒf[ƒ^ƒRƒs[
+	// (2) ãƒ­ãƒ¼ã‚«ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¸ãƒ‡ãƒ¼ã‚¿ã‚³ãƒ”ãƒ¼
 	//
 //	CUtils::Log("CClipboardFormatSnap::Capture: 2");
 	m_oData.RemoveAll();

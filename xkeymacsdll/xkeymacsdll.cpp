@@ -170,7 +170,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 		}
 		catch (CMemoryException* e) {
 			e->Delete();
-//			CUtils::Log("DllMain: 'new' threw an exception");
+//			XK_LOG("DllMain: 'new' threw an exception");
 		}
 
 		if ((g_TlsIndex = TlsAlloc()) == TLS_OUT_OF_INDEXES)
@@ -332,24 +332,42 @@ BOOL CXkeymacsDll::IsKeyboardHook()
 void CXkeymacsDll::ShowKeyboardHookState()
 {
 	IconMsg msg = {MAIN_ICON,};
+
+#ifdef ENABLE_LOG
+	const char *status = "unknown";
+#endif
+
 	if (m_bHook) {
 		if (CCommands::IsTemporarilyDisableXKeymacs()) {
 			msg.nState = STATUS_DISABLE_TMP;
 			m_hCurrentCursor = m_hCursor[STATUS_DISABLE_TMP];
+#ifdef ENABLE_LOG
+			status = "DISABLE_TMP";
+#endif
 		} else {
 			msg.nState = STATUS_ENABLE;
 			m_hCurrentCursor = m_hCursor[STATUS_ENABLE];
+#ifdef ENABLE_LOG
+			status = "ENABLE";
+#endif
 		}
 	} else {
 		msg.nState = STATUS_DISABLE_WOCQ;
+#ifdef ENABLE_LOG
+			status = "DISABLE_WOCQ";
+#endif
 	}
 	if (m_Config.nSettingStyle[m_nAppID] == SETTING_DISABLE
 	 || (!_tcsicmp(m_Config.szSpecialApp[m_nAppID], _T("Default"))
 	  && CUtils::IsDefaultIgnoreApplication())) {
 		msg.nState = STATUS_DISABLE;
 		m_hCurrentCursor = m_hCursor[STATUS_DISABLE];
+#ifdef ENABLE_LOG
+		status = "DISABLE";
+#endif
 	}
 	SendIconMessage(&msg, 1);
+	XK_LOG(_T("SetKeyboardHookFlag - status=%s appID=%d"), status, m_nApplicationID);
 	DoSetCursor();
 }
 
