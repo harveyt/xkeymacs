@@ -1,4 +1,6 @@
+BINDIR	= $(HOME)/bin/win
 DEVENV	= "/cygdrive/c/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/IDE/devenv.com"
+DESKTOP	= /cygdrive/c/Users/$(USER)/Desktop
 
 build:
 	rm Release/xkeymacs.dll	Release/xkeymacs64.dll
@@ -7,4 +9,11 @@ build:
 
 clean:
 	git clean -fdx
+
+install:
+	cp -f Release/xkeymacs.dll $(BINDIR)
+	cp -f Release/xkeymacs.exe $(BINDIR)
+	cp -f Release/xkeymacs64.dll $(BINDIR)
+	cp -f Release/xkeymacs64.exe $(BINDIR)
+	cp -f XKeymacs.lnk $(DESKTOP)
 
