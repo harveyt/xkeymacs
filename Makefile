@@ -3,7 +3,10 @@ DEVENV	= "/cygdrive/c/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/I
 DESKTOP	= /cygdrive/c/Users/$(USER)/Desktop
 
 build:
-	rm Release/xkeymacs.dll	Release/xkeymacs64.dll
+	rm -f Release/xkeymacs.dll
+	rm -f Release/xkeymacs.exe
+	rm -f Release/xkeymacs64.dll
+	rm -f Release/xkeymacs64.exe
 	$(DEVENV) xkeymacs-vc10.sln /build "Release|Win32"
 	$(DEVENV) xkeymacs-vc10.sln /build "Release|x64"
 
