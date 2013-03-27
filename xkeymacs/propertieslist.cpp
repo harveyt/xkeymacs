@@ -65,18 +65,17 @@ void CPropertiesList::SetDialogData()
 
 	const int nAppID = m_pProperties->GetApplicationID();
 	for (int nComID = 1; nComID < MAX_COMMAND; ++nComID) {
-		const LPCSTR szComName = CCommands::GetCommandName(nComID);
+		const LPCTSTR szComName = CmdTable::Name(nComID);
 		if (!szComName[0])
 			break;
-		const CString category(MAKEINTRESOURCE(CCommands::GetCategoryID(nComID)));
+		const CString category(MAKEINTRESOURCE(CmdTable::CategoryID(nComID)));
 		if (category.IsEmpty())
 			continue;
 		bool bInserted = false;
 		for (int nType = 0; nType < MAX_COMMAND_TYPE; ++nType) {
 			for (int nKey = 0; nKey < MAX_KEY; ++nKey)
-				if (nComID == CProfile::GetCommandID(nAppID, nType, nKey)) {
-					CString key;
-					key.Format(_T("%s%s"), CProfile::CommandType2String(nType), CProfile::Key2String(nKey));
+				if (nComID == CProfile::GetCmdID(nAppID, nType, nKey)) {
+					CString key = CProfile::KeyToString(nType, nKey);
 					InsertItem(category, szComName, key);
 					bInserted = true;
 				}

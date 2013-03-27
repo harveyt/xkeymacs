@@ -21,9 +21,6 @@
     <ClCompile Include="109keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dotxkeymacs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -69,15 +66,21 @@
     <ClCompile Include="imelist.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KeyString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AppList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FuncDefs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="104keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="109keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dotxkeymacs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="key.h">
@@ -129,6 +132,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AppList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FuncDefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

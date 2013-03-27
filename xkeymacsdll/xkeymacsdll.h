@@ -9,7 +9,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "StdAfx.h"
 #include "KbdMacro.h"
 #include "ClipboardSnap.h"
 #include "defs.h"
@@ -29,11 +28,12 @@ public:
 	static void ResetHooks();
 	static void ReleaseHooks();
 	static void ReleaseKeyboardHook();
-	static void ToggleKeyboardHookState();
-	static BOOL IsKeyboardHook();
-	static void ShowKeyboardHookState();
+	static void SetHookStateDirect(bool enable);
+	static void ToggleHookState();
+	static bool GetHookState();
+	static void ShowHookState();
 	static void SetM_xTip(LPCTSTR szPath);
-	static BOOL SendIconMessage(IconMsg *pMsg, DWORD num);
+	static void SendIconMessage(IconState *state, int num);
 	static BOOL IsDown(BYTE bVk, BOOL bPhysicalKey = TRUE);
 	static void Kdu(BYTE bVk, DWORD n = 1, BOOL bOriginal = TRUE);
 	static void DepressKey(BYTE bVk, BOOL bOriginal = TRUE);
@@ -43,10 +43,11 @@ public:
 	static void AddKillRing(BOOL bNewData = TRUE);
 	static CClipboardSnap* GetKillRing(CClipboardSnap *pSnap, BOOL bForce = TRUE);
 	static void IncreaseKillRingIndex(int nKillRing = 1);
-	static BOOL GetEnableCUA();
-	static BOOL Get326Compatible();
-	static BOOL Is106Keyboard();
+	static bool GetEnableCUA();
+	static bool Get326Compatible();
+	static bool Is106Keyboard();
 	static void SetKbMacro(KbdMacro* kbdMacro);
+	static SHORT ConvVkey(SHORT in, int mode);
 	static int GetAccelerate(void);
 	static void SetAccelerate(int nAccelerate);
 	static void SetKeyboardSpeed(int nKeyboardSpeed);
@@ -55,20 +56,23 @@ public:
 
 private:
 	static Config m_Config;
+	static AppConfig* m_CurrentConfig;
+	static BYTE (*m_CmdID)[MAX_KEY];
+	static char (*m_FuncID)[MAX_KEY];
 	static HHOOK m_hHookCallWnd;
 	static HHOOK m_hHookCallWndRet;
 	static HHOOK m_hHookGetMessage;
 	static HHOOK m_hHookShell;
 	static bool m_bEnableKeyboardHook;
-	static BOOL m_bHook;
+	static bool m_bHook;
+	static void SetHookState(bool enable);
 	static DWORD m_nHookAltRelease;
 	static LRESULT CALLBACK CallWndProc(int nCode, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK CallWndRetProc(int nCode, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK GetMsgProc(int nCode, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK ShellProc(int nCode, WPARAM wParam, LPARAM lParam);
-	static int m_nAppID;
-	static void InitKeyboardProc(BOOL bImeComposition);
-	static int GetAppID(LPCSTR szName, int fallback);
+	static void InitKeyboardProc();
+	static AppConfig* GetAppConfig(LPCTSTR szName, AppConfig* fallback);
 	static BOOL m_bRightShift;
 	static BOOL m_bRightControl;
 	static BOOL m_bRightAlt;
@@ -89,11 +93,7 @@ private:
 	static CList<CClipboardSnap *, CClipboardSnap *> m_oKillRing;
 	static int m_nKillRing;
 	static KbdMacro* m_kbdMacro;
-	static void CallFunction(int nFuncID);
-	static KeyBind ParseKey(LPCTSTR& def);
-	static BOOL IsShift(TCHAR nAscii);
-	static BYTE a2v(TCHAR nAscii);
-	static BOOL IsMatchWindowText(CString szWindowText);
+	static void CallFunction(int id);
 	static int m_nAccelerate;
 	static int m_nKeyboardSpeed;
 	static HCURSOR m_hCurrentCursor;

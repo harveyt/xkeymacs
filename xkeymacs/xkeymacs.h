@@ -8,7 +8,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "stdafx.h"
 #ifndef __AFXWIN_H__
 	#error include 'stdafx.h' before including this file for PCH
 #endif
@@ -39,7 +38,7 @@ public:
 		//    DO NOT EDIT what you see in these blocks of generated code !
 	//}}AFX_MSG
 	BOOL IsWow64();
-	BOOL SendIPCMessage(DWORD msg);
+	void SendIPC64Message(DWORD msg);
 	BOOL Start64bitProcess();
 	DECLARE_MESSAGE_MAP()
 private:

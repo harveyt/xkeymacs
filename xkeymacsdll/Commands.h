@@ -9,7 +9,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "StdAfx.h"
 #include "defs.h"
 #include "KbdMacro.h"
 #include "ClipboardSnap.h"
@@ -172,16 +171,9 @@ public:
 	static int BackwardChar();
 	static int BeginningOfLine();
 	static int ForwardChar();
-	static LPCSTR GetCommandName(int nComID);
-	static int GetCategoryID(int nComID);
-	static int GetDescriptionID(int nComID);
-	static int GetToolTipID(int nComID);
-	static int GetDefaultCommandType(int nComID, int nIndex);
-	static int GetDefaultCommandKey(int nComID, int nIndex);
-	static int GetDefaultControlID(int nComID, int nIndex);
 
 private:
-	static KbdMacro m_kbdMacro;
+	static KbdMacro m_KbdMacro;
 	static BOOL CutFollowingWord();
 	static int CaseWord(CASE_WORD nCase);
 	static BOOL CopyCurrentLine();
@@ -242,20 +234,5 @@ private:
 	static void Su();
 	static BOOL m_bIsSu;
 };
-
-const int MAX_KEY_BIND = 8;
-
-struct Command
-{
-	LPCTSTR szCommandName;
-	int nCategoryID;
-	int nDescriptionID;
-	int nToolTipID;
-	int (*fCommand)();
-	KeyBind keybind[MAX_KEY_BIND];
-};
-
-const int MAX_COMMAND = 115;
-extern AFX_EXT_DATA const Command Commands[MAX_COMMAND];
 
 #endif // !defined(AFX_COMMANDS_H__3AD9D537_AB40_40BB_9697_35F1BB0CA431__INCLUDED_)

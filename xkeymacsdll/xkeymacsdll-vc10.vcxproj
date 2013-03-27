@@ -96,6 +96,8 @@
       <AdditionalIncludeDirectories>C:\WinDDK\7600.16385.1\inc\mfc42</AdditionalIncludeDirectories>
       <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ForcedIncludeFiles>StdAfx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -115,11 +117,13 @@
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_AFXEXT;XKEYMACSDLLVC10_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>C:\WinDDK\7600.16385.1\inc\mfc42</AdditionalIncludeDirectories>
-      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ForcedIncludeFiles>StdAfx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -146,6 +150,8 @@
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ForcedIncludeFiles>StdAfx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -175,6 +181,8 @@
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ForcedIncludeFiles>StdAfx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -192,12 +200,19 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AppName.cpp" />
     <ClCompile Include="ClipboardFormatSnap.cpp" />
     <ClCompile Include="ClipboardSnap.cpp" />
+    <ClCompile Include="CmdTable.cpp" />
+    <ClCompile Include="CmdTableData.cpp" />
     <ClCompile Include="Commands.cpp" />
-    <ClCompile Include="FunctionDefinition.cpp" />
     <ClCompile Include="KbdMacro.cpp" />
-    <ClCompile Include="StdAfx.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="xkeymacsdll.cpp" />
   </ItemGroup>
@@ -206,11 +221,12 @@
     <None Include="xkeymacsdll.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AppName.h" />
     <ClInclude Include="ClipboardFormatSnap.h" />
     <ClInclude Include="ClipboardSnap.h" />
+    <ClInclude Include="CmdTable.h" />
     <ClInclude Include="Commands.h" />
     <ClInclude Include="defs.h" />
-    <ClInclude Include="FunctionDefinition.h" />
     <ClInclude Include="ipc.h" />
     <ClInclude Include="KbdMacro.h" />
     <ClInclude Include="resource.h" />

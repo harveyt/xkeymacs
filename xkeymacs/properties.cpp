@@ -4,6 +4,7 @@
 #include "properties.h"
 #include "resource.h"
 #include "profile.h"
+#include "AppList.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -125,7 +126,7 @@ void CProperties::OnSelchangeApplication()
 void CProperties::InitAppList()
 {
 	m_cAppList.ResetContent();
-	CProfile::InitAppList(*this);
+	AppList::SetAppList(*this);
 	// Add Dialog
 	m_cAppList.InsertString(0, CString(MAKEINTRESOURCE(IDS_DIALOG_TITLE)));
 	// Add Default
@@ -141,6 +142,8 @@ void CProperties::GetDialogData()
 		return;
 	}
 	m_nAppID = CProfile::AssignAppID(m_appName);
+	if (m_nAppID == MAX_APP)
+		return;
 	CProfile::SetSettingStyle(m_nAppID, m_nSettingStyle);
 	CProfile::SetAppTitle(m_nAppID, m_appTitle);
 	CProfile::SetKillRingMax(m_nAppID, m_nKillRingMax);
@@ -294,18 +297,18 @@ void CProperties::OnApply()
 
 void CProperties::OnLoadDefault() 
 {
-	CProfile::CopyData(m_appName, CString(MAKEINTRESOURCE(IDS_DEFAULT)));
+	CProfile::CopyDefault(m_appName);
 	SetDialogData();
 }
 
 void CProperties::OnSelectAll() 
 {
-	m_basic.SetAllDialogData(1, TRUE);
+	m_basic.SetDefaultBind(1);
 }
 
 void CProperties::OnClearAll() 
 {
-	m_basic.SetAllDialogData(0, TRUE);
+	m_basic.SetDefaultBind(0);
 }
 
 int CProperties::GetApplicationID()
@@ -334,11 +337,7 @@ void CProperties::OnSettingSpecific()
 {
 	UpdateData();
 	EnableControl(ACTIVE_TAB);
-
-	if (CProfile::GetAppID(m_appName) == MAX_APP) {
-		CProfile::CopyData(m_appName, CString(MAKEINTRESOURCE(IDS_DEFAULT)));
-		SetDialogData();
-	}
+	m_nAppID = CProfile::AssignAppID(m_appName);
 }
 
 BOOL CProperties::IsEnableControl()

@@ -4,6 +4,7 @@
 #include "xkeymacsdll.h"
 #include "Utils.h"
 #include "Commands.h"
+#include "CmdTable.h"
 #include "../xkeymacs/resource.h"
 #include <math.h>
 #include <Imm.h>
@@ -14,121 +15,6 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-
-struct Modifier {
-	LPCTSTR name;
-	int id;
-};
-
-static const Modifier Modifiers[] = {
-//	{ _T("A-"), ALT },
-	{ _T("C-"), CONTROL},
-//	{ _T("H-"), HYPER },
-	{ _T("M-"), META },
-	{ _T("S-"), SHIFT },
-//	{ _T("s-"), SUPER },
-	{ _T("Ctrl+"), WIN_CTRL },
-	{ _T("Alt+"), WIN_ALT },
-	{ _T("Win+"), WIN_WIN },
-};
-static const int MAX_MODIFIER = _countof(Modifiers);
-
-static const KeyName KeyNames[] = {
-//	{ VK_LBUTTON,		_T("mouse-1") },				// does not work well
-//	{ VK_RBUTTON,		_T("mouse-3") },				// does not work well
-	{ VK_CANCEL,		_T("break") },
-//	{ VK_MBUTTON,		_T("mouse-2") },				// does not work well
-	{ VK_BACK,			_T("backspace") },
-	{ VK_TAB,			_T("tab") },
-	{ VK_RETURN,		_T("return") },
-	{ VK_CAPITAL,		_T("capslock") },
-	{ VK_KANA,			_T("kana") },
-	{ VK_KANJI,			_T("kanji") },
-	{ VK_ESCAPE,		_T("escape") },
-	{ VK_CONVERT,		_T("convert") },
-	{ VK_NONCONVERT,	_T("nonconvert") },
-//	{ VK_SPACE,			_T("SPC") },					// [? ]
-	{ VK_PRIOR,			_T("prior") },
-	{ VK_NEXT,			_T("next") },
-	{ VK_END,			_T("end") },
-	{ VK_HOME,			_T("home") },
-	{ VK_LEFT,			_T("left") },
-	{ VK_UP,			_T("up") },
-	{ VK_RIGHT,			_T("right") },
-	{ VK_DOWN,			_T("down") },
-	{ VK_SELECT,		_T("select") },
-	{ VK_PRINT,			_T("print") },
-	{ VK_EXECUTE,		_T("execute") },
-	{ VK_SNAPSHOT,		_T("printscreen") },			// work as print
-	{ VK_INSERT,		_T("insert") },
-	{ VK_DELETE,		_T("delete") },
-	{ VK_LWIN,			_T("lwindow") },
-	{ VK_RWIN,			_T("rwindow") },
-	{ VK_APPS,			_T("apps") },
-	{ VK_SLEEP,			_T("sleep") },
-	{ VK_NUMPAD0,		_T("kp-0") },
-	{ VK_NUMPAD1,		_T("kp-1") },
-	{ VK_NUMPAD2,		_T("kp-2") },
-	{ VK_NUMPAD3,		_T("kp-3") },
-	{ VK_NUMPAD4,		_T("kp-4") },
-	{ VK_NUMPAD5,		_T("kp-5") },
-	{ VK_NUMPAD6,		_T("kp-6") },
-	{ VK_NUMPAD7,		_T("kp-7") },
-	{ VK_NUMPAD8,		_T("kp-8") },
-	{ VK_NUMPAD9,		_T("kp-9") },
-	{ VK_MULTIPLY,		_T("kp-multiply") },
-	{ VK_ADD,			_T("kp-add") },
-	{ VK_SUBTRACT,		_T("kp-subtract") },
-	{ VK_DECIMAL,		_T("kp-decimal") },
-	{ VK_DIVIDE,		_T("kp-divide") },
-//	{ VK_F1,			_T("f1") },						// FIXME
-//	{ VK_F2,			_T("f2") },						// Move at the end of definition of function keys to keep away confliction f1/f2 and f1?/f2? by _tcsncmp() i.e. strncmp()
-	{ VK_F3,			_T("f3") },
-	{ VK_F4,			_T("f4") },
-	{ VK_F5,			_T("f5") },
-	{ VK_F6,			_T("f6") },
-	{ VK_F7,			_T("f7") },
-	{ VK_F8,			_T("f8") },
-	{ VK_F9,			_T("f9") },
-	{ VK_F10,			_T("f10") },
-	{ VK_F11,			_T("f11") },
-	{ VK_F12,			_T("f12") },
-	{ VK_F13,			_T("f13") },
-	{ VK_F14,			_T("f14") },
-	{ VK_F15,			_T("f15") },
-	{ VK_F16,			_T("f16") },
-	{ VK_F17,			_T("f17") },
-	{ VK_F18,			_T("f18") },
-	{ VK_F19,			_T("f19") },
-	{ VK_F20,			_T("f20") },
-	{ VK_F21,			_T("f21") },
-	{ VK_F22,			_T("f22") },
-	{ VK_F23,			_T("f23") },
-	{ VK_F24,			_T("f24") },
-	{ VK_F1,			_T("f1") },
-	{ VK_F2,			_T("f2") },
-	{ VK_NUMLOCK,		_T("kp-numlock") },
-	{ VK_SCROLL,		_T("scroll") },
-	{ 0xa6,				_T("browser-back") },			// VK_BROWSER_BACK
-	{ 0xa7,				_T("browser-forward") },		// VK_BROWSER_FORWARD
-	{ 0xa8,				_T("browser-refresh") },		// VK_BROWSER_REFRESH
-	{ 0xa9,				_T("browser-stop") },			// VK_BROWSER_STOP
-	{ 0xaa,				_T("browser-search") },			// VK_BROWSER_SEARCH
-	{ 0xab,				_T("browser-favorites") },		// VK_BROWSER_FAVORITES
-	{ 0xac,				_T("browser-home") },			// VK_BROWSER_HOME
-	{ 0xad,				_T("volume-mute") },			// VK_VOLUME_MUTE
-	{ 0xae,				_T("volume-down") },			// VK_VOLUME_DOWN
-	{ 0xaf,				_T("volume-up") },				// VK_VOLUME_UP
-	{ 0xb0,				_T("media-next-track") },		// VK_MEDIA_NEXT_TRACK
-	{ 0xb1,				_T("media-prev-track") },		// VK_MEDIA_PREV_TRACK
-	{ 0xb2,				_T("media-stop") },				// VK_MEDIA_STOP
-	{ 0xb3,				_T("media-play-pause") },		// VK_MEDIA_PLAY_PAUSE
-	{ 0xb4,				_T("launch-mail") },			// VK_LAUNCH_MAIL
-	{ 0xb5,				_T("launch-media-select") },	// VK_LAUNCH_MEDIA_SELECT
-	{ 0xb6,				_T("launch-1") },				// VK_LAUNCH_APP1
-	{ 0xb7,				_T("launch-2") },				// VK_LAUNCH_APP2
-};
-static const int MAX_KEYNAME = _countof(KeyNames);
 
 static AFX_EXTENSION_MODULE XkeymacsdllDLL = { NULL, NULL };
 
@@ -205,13 +91,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 #pragma data_seg(".xkmcs")
 Config CXkeymacsDll::m_Config = {0};
 bool CXkeymacsDll::m_bEnableKeyboardHook = false;
-BOOL CXkeymacsDll::m_bHook = TRUE;
-DWORD CXkeymacsDll::m_nHookAltRelease = 0;
-BOOL CXkeymacsDll::m_bRightShift = FALSE;
-BOOL CXkeymacsDll::m_bRightControl = FALSE;
-BOOL CXkeymacsDll::m_bRightAlt = FALSE;
-TCHAR CXkeymacsDll::m_M_xTip[128] = "";
-BYTE CXkeymacsDll::m_nOriginal[MAX_COMMAND_TYPE][MAX_KEY] = {'\0'};
+bool CXkeymacsDll::m_bHook = true;
 int CXkeymacsDll::m_nAccelerate = 0;
 int CXkeymacsDll::m_nKeyboardSpeed = 31;
 HCURSOR CXkeymacsDll::m_hCurrentCursor = NULL;
@@ -219,11 +99,19 @@ BOOL CXkeymacsDll::m_bCursor = FALSE;
 HCURSOR CXkeymacsDll::m_hCursor[MAX_STATUS] = {'\0'};
 #pragma data_seg()
 
+AppConfig* CXkeymacsDll::m_CurrentConfig = NULL;
+BYTE (*CXkeymacsDll::m_CmdID)[MAX_KEY];
+char (*CXkeymacsDll::m_FuncID)[MAX_KEY];
 HHOOK CXkeymacsDll::m_hHookCallWnd = NULL;
 HHOOK CXkeymacsDll::m_hHookCallWndRet = NULL;
 HHOOK CXkeymacsDll::m_hHookGetMessage = NULL;
 HHOOK CXkeymacsDll::m_hHookShell = NULL;
-int CXkeymacsDll::m_nAppID = 0;
+DWORD CXkeymacsDll::m_nHookAltRelease = 0;
+BOOL CXkeymacsDll::m_bRightShift = FALSE;
+BOOL CXkeymacsDll::m_bRightControl = FALSE;
+BOOL CXkeymacsDll::m_bRightAlt = FALSE;
+TCHAR CXkeymacsDll::m_M_xTip[128] = "";
+BYTE CXkeymacsDll::m_nOriginal[MAX_COMMAND_TYPE][MAX_KEY] = {'\0'};
 CList<CClipboardSnap *, CClipboardSnap *> CXkeymacsDll::m_oKillRing;
 int CXkeymacsDll::m_nKillRing = 0;
 KbdMacro* CXkeymacsDll::m_kbdMacro = NULL;
@@ -318,38 +206,51 @@ void CXkeymacsDll::ReleaseKeyboardHook()
 		unhook(*phHook);
 }
 
-void CXkeymacsDll::ToggleKeyboardHookState()
+void CXkeymacsDll::SetHookStateDirect(bool enable)
 {
-	m_bHook = !m_bHook;
-	ShowKeyboardHookState();
+	m_bHook = enable;
 }
 
-BOOL CXkeymacsDll::IsKeyboardHook()
+void CXkeymacsDll::ToggleHookState()
+{
+	SetHookState(!m_bHook);
+}
+
+void CXkeymacsDll::SetHookState(bool enable)
+{
+	DWORD ack, read;
+	IPC32Message msg;
+	msg.Type = IPC32_HOOKSTATE;
+	msg.Enable = enable;
+	CallNamedPipe(XKEYMACS32_PIPE, &msg, offsetof(IPC32Message, Enable) + sizeof(bool), &ack, sizeof(DWORD), &read, NMPWAIT_NOWAIT);
+
+	ShowHookState();
+}
+
+bool CXkeymacsDll::GetHookState()
 {
 	return m_bHook;
 }
 
-void CXkeymacsDll::ShowKeyboardHookState()
+void CXkeymacsDll::ShowHookState()
 {
-	IconMsg msg = {MAIN_ICON,};
+	IconState main = { MAIN_ICON, STATUS_ENABLE };
 	if (m_bHook) {
 		if (CCommands::IsTemporarilyDisableXKeymacs()) {
-			msg.nState = STATUS_DISABLE_TMP;
+			main.State = STATUS_DISABLE_TMP;
 			m_hCurrentCursor = m_hCursor[STATUS_DISABLE_TMP];
 		} else {
-			msg.nState = STATUS_ENABLE;
+			main.State = STATUS_ENABLE;
 			m_hCurrentCursor = m_hCursor[STATUS_ENABLE];
 		}
-	} else {
-		msg.nState = STATUS_DISABLE_WOCQ;
-	}
-	if (m_Config.nSettingStyle[m_nAppID] == SETTING_DISABLE
-	 || (!_tcsicmp(m_Config.szSpecialApp[m_nAppID], _T("Default"))
-	  && CUtils::IsDefaultIgnoreApplication())) {
-		msg.nState = STATUS_DISABLE;
+	} else
+		main.State = STATUS_DISABLE_WOCQ;
+	if (m_CurrentConfig->SettingStyle == SETTING_DISABLE ||
+			(!_tcsicmp(m_CurrentConfig->AppName, _T("Default")) && CUtils::IsDefaultIgnoreApplication())) {
+		main.State = STATUS_DISABLE;
 		m_hCurrentCursor = m_hCursor[STATUS_DISABLE];
 	}
-	SendIconMessage(&msg, 1);
+	SendIconMessage(&main, 1);
 	DoSetCursor();
 }
 
@@ -360,21 +261,25 @@ LRESULT CALLBACK CXkeymacsDll::CallWndProc(int nCode, WPARAM wParam, LPARAM lPar
 		const CWPSTRUCT *cwps = reinterpret_cast<CWPSTRUCT *>(lParam);
 		switch (cwps->message) {
 		case WM_IME_STARTCOMPOSITION:
-			InitKeyboardProc(TRUE);
+			AppName::SetIMEState(true);
+			InitKeyboardProc();
 			break;
 		case WM_IME_ENDCOMPOSITION:
-			InitKeyboardProc(FALSE);
+			AppName::SetIMEState(false);
+			InitKeyboardProc();
 			break;
 		case WM_SETFOCUS:
 			if (cwps->hwnd == GetForegroundWindow()) {
-				InitKeyboardProc(FALSE);
-				ShowKeyboardHookState();
+				AppName::SetIMEState(false);
+				InitKeyboardProc();
+				ShowHookState();
 			}
 			break;
 		case WM_NCACTIVATE:
 			if (cwps->wParam && cwps->hwnd == GetForegroundWindow()) {
-				InitKeyboardProc(FALSE);
-				ShowKeyboardHookState();
+				AppName::SetIMEState(false);
+				InitKeyboardProc();
+				ShowHookState();
 			}
 			break;
 		}
@@ -390,7 +295,7 @@ LRESULT CALLBACK CXkeymacsDll::CallWndRetProc(int nCode, WPARAM wParam, LPARAM l
 		switch (cwprets->message) {
 		case WM_SETTEXT:
 			if (cwprets->hwnd == GetForegroundWindow())
-				InitKeyboardProc(FALSE);
+				InitKeyboardProc();
 			break;
 		case WM_SETCURSOR:
 			DoSetCursor();
@@ -407,10 +312,12 @@ LRESULT CALLBACK CXkeymacsDll::GetMsgProc(int nCode, WPARAM wParam, LPARAM lPara
 		const MSG *msg = reinterpret_cast<MSG *>(lParam);
 		switch (msg->message) {
 		case WM_IME_STARTCOMPOSITION:
-			InitKeyboardProc(TRUE);
+			AppName::SetIMEState(true);
+			InitKeyboardProc();
 			break;
 		case WM_IME_ENDCOMPOSITION:
-			InitKeyboardProc(FALSE);
+			AppName::SetIMEState(false);
+			InitKeyboardProc();
 			break;
 		}
 	}
@@ -424,42 +331,48 @@ LRESULT CALLBACK CXkeymacsDll::ShellProc(int nCode, WPARAM wParam, LPARAM lParam
 		TCHAR className[CLASS_NAME_LENGTH];
 		GetClassName(reinterpret_cast<HWND>(wParam), className, CLASS_NAME_LENGTH);
 		if (!_tcsicmp(className, _T("ConsoleWindowClass"))) {
-			InitKeyboardProc(FALSE);
-			ShowKeyboardHookState();
+			AppName::SetIMEState(false);
+			InitKeyboardProc();
+			ShowHookState();
 		}
 	}
 	return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
-void CXkeymacsDll::InitKeyboardProc(BOOL bImeComposition)
+void CXkeymacsDll::InitKeyboardProc()
 {
-	CUtils::SetApplicationName(bImeComposition);
-	if (_tcsnicmp(m_Config.szSpecialApp[m_nAppID], CUtils::GetApplicationName(), 0xF) || !IsMatchWindowText(m_Config.szWindowText[m_nAppID])) {	// PROCESSENTRY32 has only 0xF bytes of Name
-		m_nAppID = -1;
+	AppName::Init();
+	if (m_CurrentConfig == NULL ||
+			_tcsnicmp(m_CurrentConfig->AppName, AppName::GetAppName(), 0xF) || 	// PROCESSENTRY32 has only 0xF bytes of Name
+			!CUtils::IsMatchWindowText(m_CurrentConfig->WindowText)) {
+		m_CurrentConfig = NULL;
 		for (int nAppID = 0; nAppID < MAX_APP; ++nAppID) {
-			if (_tcsnicmp(m_Config.szSpecialApp[nAppID], CUtils::GetApplicationName(), 0xF) || !IsMatchWindowText(m_Config.szWindowText[nAppID]))
+			AppConfig* appConfig = m_Config.AppConfig + nAppID;
+			if (_tcsnicmp(appConfig->AppName, AppName::GetAppName(), 0xF) || !CUtils::IsMatchWindowText(appConfig->WindowText))
 				continue;
-			if (m_nAppID < 0)
-				m_nAppID = nAppID;
+			if (m_CurrentConfig == NULL)
+				m_CurrentConfig = appConfig;
 			else {
-				const LPCSTR curText = m_Config.szWindowText[m_nAppID];
-				const LPCSTR newText = m_Config.szWindowText[nAppID];
-				const int curType = CUtils::GetWindowTextType(curText);
-				const int newType = CUtils::GetWindowTextType(newText);
+				LPCTSTR curText = m_CurrentConfig->WindowText;
+				LPCTSTR newText = appConfig->WindowText;
+				int curType = CUtils::GetWindowTextType(curText);
+				int newType = CUtils::GetWindowTextType(newText);
 				if (curType < newType || curType == newType && _tcscmp(curText, newText) <= 0)
-					m_nAppID = nAppID;
+					m_CurrentConfig = appConfig;
 			}
 		}
-		if (m_nAppID < 0)
-			m_nAppID = GetAppID(_T("Default"), 0);
+		if (m_CurrentConfig == NULL)
+			m_CurrentConfig = GetAppConfig(_T("Default"), m_Config.AppConfig);
 	}
-	if (m_Config.nSettingStyle[m_nAppID] != SETTING_DISABLE &&
-			(_tcsicmp(m_Config.szSpecialApp[m_nAppID], _T("Default")) || !CUtils::IsDefaultIgnoreApplication()) &&
-			!bImeComposition && CUtils::IsDialog() && m_Config.bUseDialogSetting[m_nAppID])
+	if (m_CurrentConfig->SettingStyle != SETTING_DISABLE &&
+			(_tcsicmp(m_CurrentConfig->AppName, _T("Default")) || !CUtils::IsDefaultIgnoreApplication()) &&
+			!AppName::GetIMEState() && CUtils::IsDialog() && m_CurrentConfig->UseDialogSetting)
 		// Use Dialog Setting
-		m_nAppID = GetAppID(_T("Dialog"), m_nAppID);
+		m_CurrentConfig = GetAppConfig(_T("Dialog"), m_CurrentConfig);
+	m_CmdID = m_CurrentConfig->CmdID;
+	m_FuncID = m_CurrentConfig->FuncID;
 
-	IconMsg msg[3] = {
+	IconState msg[3] = {
 		{CX_ICON, OFF_ICON, ""},
 		{MX_ICON, OFF_ICON, ""},
 		{META_ICON, OFF_ICON, ""}
@@ -470,19 +383,20 @@ void CXkeymacsDll::InitKeyboardProc(BOOL bImeComposition)
 	CCommands::Reset();
 }
 
-int CXkeymacsDll::GetAppID(LPCSTR szName, int fallback)
+AppConfig* CXkeymacsDll::GetAppConfig(LPCTSTR name, AppConfig* fallback)
 {
 	for (int i = 0; i < MAX_APP; ++i)
-		if (!_tcsicmp(m_Config.szSpecialApp[i], szName))
-			return i;
+		if (!_tcsicmp(m_Config.AppConfig[i].AppName, name))
+			return m_Config.AppConfig + i;
 	return fallback;
 }
 
 LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
-	const BYTE nOrigKey = static_cast<BYTE>(wParam);
-	const bool bRelease = (HIWORD(lParam) & KF_UP) != 0;
-	const bool bExtended = (HIWORD(lParam) & KF_EXTENDED) != 0;
+	BYTE nOrigKey = static_cast<BYTE>(wParam);
+	bool bRelease = (HIWORD(lParam) & KF_UP) != 0;
+	bool bExtended = (HIWORD(lParam) & KF_EXTENDED) != 0;
+	BYTE nKey = nOrigKey;
 
 	static BOOL bLocked = FALSE;
 	static const BYTE RECURSIVE_KEY = 0x07;
@@ -492,7 +406,7 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 
 //	CUtils::Log(_T("nCode = %#x, nKey = %#x, lParam = %#x"), nCode, nOrigKey, lParam);
 
-	if (!m_bEnableKeyboardHook || CUtils::IsXkeymacs() ||
+	if (!m_bEnableKeyboardHook || m_CurrentConfig == NULL || CUtils::IsXkeymacs() ||
 			nCode < 0 || nCode == HC_NOREMOVE)
 		return CallNextHookEx(NULL, nCode, wParam, lParam);
 
@@ -509,7 +423,6 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 
 	CancelMarkWithShift(nOrigKey, bRelease);
 
-	BYTE nKey = nOrigKey;
 	switch (nKey) {
 	case VK_CONTROL:
 		nKey = bExtended ? VK_RCONTROL : VK_LCONTROL;
@@ -521,9 +434,6 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 		nKey = bExtended ? VK_RSHIFT : VK_LSHIFT;
 		break;
 	}
-
-#define fCommand(type) (Commands[m_Config.nCommandID[m_nAppID][(type)][nKey]].fCommand)
-#define nFunctionID (m_Config.nFunctionID[m_nAppID][nType][nKey])
 
 	if (bRelease) {
 		switch (nOrigKey) {
@@ -540,7 +450,7 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 		case VK_RWIN:
 		case VK_APPS:
 			for (int i = 0; i < MAX_COMMAND_TYPE; ++i) {
-				int (*const fCommand)() = fCommand(i);
+				int (*fCommand)() = CmdTable::Command(m_CmdID[i][nKey]);
 				if (fCommand && !(nOrigKey == VK_MENU && fCommand == CCommands::MetaAlt))
 					goto HOOK;
 			}
@@ -556,11 +466,11 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 		goto DO_NOTHING;
 	}
 
-	if (m_Config.nSettingStyle[m_nAppID] == SETTING_DISABLE)
+	if (m_CurrentConfig->SettingStyle == SETTING_DISABLE)
 		goto DO_NOTHING;
 
 	// Do Nothing for Meadow, Mule for Win32, ... if those use default setting.
-	if (!_tcsicmp(m_Config.szSpecialApp[m_nAppID], _T("Default")) && CUtils::IsDefaultIgnoreApplication())
+	if (!_tcsicmp(m_CurrentConfig->AppName, _T("Default")) && CUtils::IsDefaultIgnoreApplication())
 		goto DO_NOTHING;
 
 	switch (IsPassThrough(nKey)) {
@@ -575,8 +485,8 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 	// set command type
 	int nType = IsDown(VK_SHIFT) * SHIFT | IsControl() * CONTROL | IsMeta() * META | CCommands::bC_x() * CONTROLX;
 	// Ignore undefined C-x ?
-	if (nType & CONTROLX && fCommand(nType) == NULL && nFunctionID < 0) {
-		if (m_Config.bIgnoreUndefinedC_x[m_nAppID]) {
+	if (nType & CONTROLX && m_CmdID[nType][nKey] == 0 && m_FuncID[nType][nKey] < 0) {
+		if (m_CurrentConfig->IgnoreUndefC_x) {
 			CCommands::Reset(GOTO_HOOK);
 			goto HOOK;
 		}
@@ -584,8 +494,8 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 	}
 	// Ignore undefined Meta Ctrl+?
 	if (CCommands::bM_() && nType & CONTROL) {
-		if (fCommand(nType) == NULL && nFunctionID < 0) {
-			if (m_Config.bIgnoreUndefinedMetaCtrl[m_nAppID]) {
+		if (m_CmdID[nType][nKey] == 0 && m_FuncID[nType][nKey] < 0) {
+			if (m_CurrentConfig->IgnoreUndefMetaCtrl) {
 				if (CheckOriginal(CONTROL, nKey))
 					goto DO_NOTHING;
 				CCommands::Reset(GOTO_HOOK);
@@ -603,19 +513,17 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 	if (CheckOriginal(nVirtualType, nOrigKey))
 		goto DO_NOTHING;
 
-	int (*const fCommand)() = fCommand(nType);
+	int (*fCommand)() = CmdTable::Command(m_CmdID[nType][nKey]);
 	if (fCommand == CCommands::EnableOrDisableXKeymacs) {
-		ToggleKeyboardHookState();
+		ToggleHookState();
 		goto HOOK;
 	}
 	if (fCommand == CCommands::EnableXKeymacs) {
-		if (!m_bHook)
-			ToggleKeyboardHookState();
+		SetHookState(true);
 		goto HOOK;
 	}
 	if (fCommand == CCommands::DisableXKeymacs) {
-		if (m_bHook)
-			ToggleKeyboardHookState();
+		SetHookState(false);
 		goto HOOK;
 	}
 	if (!m_bHook)
@@ -663,19 +571,15 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 			memset(szPath, 0, sizeof(szPath));
 			goto HOOK;
 		} else if (nKey && index < MAX_PATH - 1) {
-			const BOOL bIsShiftDown = IsDown(VK_SHIFT, FALSE);
-			TCHAR nAscii = 0;
-			do { // 1-127
-				if (a2v(++nAscii) == nKey && bIsShiftDown == IsShift(nAscii)) {
-//					CUtils::Log("M-x: %#X (%c), %#X (%c)", nKey, nKey, nAscii, nAscii);
-					if (index < _tcslen(szPath))
-						memmove(szPath + index + 1, szPath + index, MAX_PATH - index - 1);
-					szPath[index++] = nAscii;
-//					CUtils::Log("M-x: %c(%#04x)", nAscii, nAscii);
-					SetM_xTip(szPath);
-					goto HOOKX;
-				}
-			} while (nAscii != 127);
+			if (SHORT ascii = ConvVkey(nKey | (static_cast<BYTE>(IsDown(VK_SHIFT, FALSE)) << 8), 1)) {
+//				CUtils::Log("M-x: %#X (%c), %#X (%c)", nKey, nKey, ascii, ascii);
+				if (index < _tcslen(szPath))
+					memmove(szPath + index + 1, szPath + index, MAX_PATH - index - 1);
+				szPath[index++] = static_cast<TCHAR>(ascii);
+//				CUtils::Log("M-x: %c(%#04x)", ascii, ascii);
+				SetM_xTip(szPath);
+				goto HOOKX;
+			}
 		}
 	}
 
@@ -691,13 +595,13 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 	}
 
 #define OneShotModifier(type, vk, mod) \
-	if (fCommand(nType & ~type) == CCommands::OneShotModifier ## mod || \
-			fCommand(nType) == CCommands::OneShotModifier ## mod ## Repeat) { \
+	if (CmdTable::Command(m_CmdID[nType & ~type][nKey]) == CCommands::OneShotModifier ## mod || \
+			CmdTable::Command(m_CmdID[nType][nKey]) == CCommands::OneShotModifier ## mod ## Repeat) { \
 		nOneShotModifier[nKey] = vk; \
 		DepressKey(vk); \
 		bCherryOneShotModifier = TRUE; \
 		goto HOOK; \
-	} else if (fCommand(nType & ~CONTROL) == CCommands::OneShotModifier ## mod ## Repeat) { \
+	} else if (CmdTable::Command(m_CmdID[nType & ~CONTROL][nKey]) == CCommands::OneShotModifier ## mod ## Repeat) { \
 		ReleaseKey(vk); \
 		bCherryOneShotModifier = FALSE; \
 		Kdu(nKey); \
@@ -714,13 +618,12 @@ LRESULT CALLBACK CXkeymacsDll::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
 	if (i == MAX_KEY)
 		bCherryOneShotModifier = FALSE;
 
-	if (0 <= nFunctionID && nFunctionID < MAX_FUNCTION && m_Config.szFunctionDefinition[nFunctionID][0]) {
-		CallFunction(nFunctionID);
+	int id = m_FuncID[nType][nKey];
+	if (0 <= id && id < MAX_FUNCTION) {
+		CallFunction(id);
 		CCommands::Reset(GOTO_HOOK);
 		goto HOOK;
 	}
-#undef fCommand
-#undef nFunctionID
 
 	if (!fCommand) {
 		if (nOrigKey == VK_CONTROL || nOrigKey == VK_MENU || nOrigKey == VK_SHIFT)
@@ -817,9 +720,9 @@ exit:
 int CXkeymacsDll::IsPassThrough(BYTE nKey)
 {
 	BYTE bVk = 0;
-	const BYTE *pnID = m_Config.nCommandID[m_nAppID][NONE]; 
+	const BYTE *pnID = m_CmdID[NONE]; 
 	do {
-		if (IsDown(bVk) && Commands[pnID[bVk]].fCommand == CCommands::PassThrough) {
+		if (IsDown(bVk) && CmdTable::Command(pnID[bVk]) == CCommands::PassThrough) {
 			if (bVk == nKey)
 				return GOTO_HOOK;
 			return GOTO_DO_NOTHING;
@@ -833,8 +736,8 @@ void CXkeymacsDll::InvokeM_x(LPCTSTR szPath)
 //	CUtils::Log("M-x: szPath=_%s_", szPath);
 	int (*fCommand)() = NULL;
 	for (int i = 0; i < MAX_COMMAND; ++i)
-		if (_tcsicmp(szPath, Commands[i].szCommandName) == 0) {
-			fCommand = Commands[i].fCommand;
+		if (_tcsicmp(szPath, CmdTable::Name(i)) == 0) {
+			fCommand = CmdTable::Command(i);
 			break;
 		}
 	if (fCommand) {
@@ -848,7 +751,7 @@ void CXkeymacsDll::InvokeM_x(LPCTSTR szPath)
 
 void CXkeymacsDll::SetModifierIcons()
 {
-	IconMsg msg[6] = {
+	IconState icons[6] = {
 		{MX_ICON, CCommands::bM_x(), ""},
 		{CX_ICON, CCommands::bC_x(), ""},
 		{META_ICON, CCommands::bM_(), ""},
@@ -856,8 +759,8 @@ void CXkeymacsDll::SetModifierIcons()
 		{CTRL_ICON, IsControl(), ""},
 		{ALT_ICON, IsDown(VK_MENU, FALSE), ""}
 	};
-	_tcscpy_s(msg[0].szTip, m_M_xTip);
-	SendIconMessage(msg, 6);
+	_tcscpy_s(icons[0].Tip, m_M_xTip);
+	SendIconMessage(icons, 6);
 }
 
 void CXkeymacsDll::SetM_xTip(LPCTSTR szPath)
@@ -867,10 +770,13 @@ void CXkeymacsDll::SetM_xTip(LPCTSTR szPath)
 		_stprintf_s(m_M_xTip, "M-x %s", szPath);
 }
 
-BOOL CXkeymacsDll::SendIconMessage(IconMsg *pMsg, DWORD num)
+void CXkeymacsDll::SendIconMessage(IconState *state, int num)
 {
 	DWORD ack, read;
-	return CallNamedPipe(ICON_PIPE, pMsg, sizeof(IconMsg) * num, &ack, sizeof(DWORD), &read, NMPWAIT_NOWAIT) && read == sizeof(DWORD);
+	IPC32Message msg;
+	msg.Type = IPC32_ICON;
+	memcpy(msg.IconState, state, num * sizeof(IconState));
+	CallNamedPipe(XKEYMACS32_PIPE, &msg, offsetof(IPC32Message, IconState) + sizeof(IconState) * num, &ack, sizeof(DWORD), &read, NMPWAIT_NOWAIT);
 }
 
 void CXkeymacsDll::Kdu(BYTE bVk, DWORD n, BOOL bOriginal)
@@ -970,15 +876,14 @@ void CXkeymacsDll::SetModifierState(UINT after, UINT before)
 	else if (!(after & SHIFT) && before & SHIFT)
 		ReleaseKey(VK_SHIFT);
 
-	if (after & CONTROL && !(before & CONTROL)) {
-		UpdateKeyboardState(VK_CONTROL, 1);
+	if (after & CONTROL && !(before & CONTROL))
 		DepressKey(VK_CONTROL);
-	} else if (!(after & CONTROL) && before & CONTROL) {
+	else if (!(after & CONTROL) && before & CONTROL) {
 		ReleaseKey(VK_CONTROL);
 		UpdateKeyboardState(VK_CONTROL, 0);
 	}
 
-	const BOOL bHookApp =
+	BOOL bHookApp =
 		CUtils::IsVisualCpp() ||  CUtils::IsVisualStudio() ||
 		CUtils::IsInternetExplorer() || CUtils::IsFirefox() || CUtils::IsChrome();
 	if (after & META && !(before & META)) {
@@ -1014,7 +919,7 @@ BOOL CXkeymacsDll::IsMeta()
 BOOL CXkeymacsDll::IsDepressedModifier(int (__cdecl *Modifier)(void), BOOL bPhysicalKey)
 {
 	BYTE bVk = 0;
-	const BYTE *pnID = m_Config.nCommandID[m_nAppID][NONE];
+	const BYTE *pnID = m_CmdID[NONE];
 	do {
 		switch (bVk) {
 		case VK_SHIFT:
@@ -1023,7 +928,7 @@ BOOL CXkeymacsDll::IsDepressedModifier(int (__cdecl *Modifier)(void), BOOL bPhys
 		case 0xf0: // Eisu key. GetAsyncKeyState returns the wrong state of Eisu key.
 			continue;
 		}
-		if (IsDown(bVk, bPhysicalKey) && Commands[pnID[bVk]].fCommand == Modifier)
+		if (IsDown(bVk, bPhysicalKey) && CmdTable::Command(pnID[bVk]) == Modifier)
 			return TRUE;
 	} while (++bVk);
 	return FALSE;
@@ -1036,7 +941,7 @@ BOOL CXkeymacsDll::IsDown(BYTE bVk, BOOL bPhysicalKey)
 
 void CXkeymacsDll::AddKillRing(BOOL bNewData)
 {
-	if (m_Config.nKillRingMax[m_nAppID] == 0) {
+	if (m_CurrentConfig->KillRingMax == 0) {
 		return;
 	}
 
@@ -1067,7 +972,7 @@ void CXkeymacsDll::AddKillRing(BOOL bNewData)
 
 	m_nKillRing = 0;
 
-	if (m_Config.nKillRingMax[m_nAppID] < m_oKillRing.GetCount()) {
+	if (m_CurrentConfig->KillRingMax < m_oKillRing.GetCount()) {
 		CClipboardSnap *pSnap = m_oKillRing.GetTail();
 		delete pSnap;
 		pSnap = NULL;
@@ -1079,7 +984,7 @@ void CXkeymacsDll::AddKillRing(BOOL bNewData)
 // Return FALSE if there is no more data
 CClipboardSnap* CXkeymacsDll::GetKillRing(CClipboardSnap* pSnap, BOOL bForce)
 {
-	if (m_Config.nKillRingMax[m_nAppID] == 0) {
+	if (m_CurrentConfig->KillRingMax == 0) {
 		return NULL;
 	}
 
@@ -1118,19 +1023,19 @@ void CXkeymacsDll::IncreaseKillRingIndex(int nKillRing)
 	m_nKillRing += nKillRing;
 }
 
-BOOL CXkeymacsDll::GetEnableCUA()
+bool CXkeymacsDll::GetEnableCUA()
 {
-	return m_Config.bEnableCUA[m_nAppID];
+	return m_CurrentConfig->EnableCUA;
 }
 
-BOOL CXkeymacsDll::Get326Compatible()
+bool CXkeymacsDll::Get326Compatible()
 {
-	return m_Config.b326Compatible[m_nAppID];
+	return m_CurrentConfig->Is326Compatible;
 }
 
-BOOL CXkeymacsDll::Is106Keyboard()
+bool CXkeymacsDll::Is106Keyboard()
 {
-	return m_Config.b106Keyboard;
+	return m_Config.Is106Keyboard;
 }
 
 void CXkeymacsDll::SetKbMacro(KbdMacro* kbdMacro)
@@ -1139,49 +1044,20 @@ void CXkeymacsDll::SetKbMacro(KbdMacro* kbdMacro)
 }
 
 // call an original command which is defined in dot.xkeymacs
-void CXkeymacsDll::CallFunction(int nFuncID)
+void CXkeymacsDll::CallFunction(int id)
 {
-	if (nFuncID < 0 || nFuncID >= MAX_FUNCTION)
+	if (id < 0 || id >= MAX_FUNCTION)
 		return;
-	LPCTSTR def = m_Config.szFunctionDefinition[nFuncID];
-	if (!def[0])
-		return;
-	std::vector<KeyBind> keybinds;
-	const LPCTSTR last = def + _tcslen(def) - 1;
-	if (*def == _T('"') && *last == _T('"')) {
-		++def; // skip '"'
-		while (def < last)
-			keybinds.push_back(ParseKey(def));
-	} else if (*def == _T('[') && *last == _T(']')) {
-		while (++def < last) { // skip '[', ']', and ' '
-			if (*def == _T('?')) { // [?f ?o ?o]
-				keybinds.push_back(ParseKey(++def));
-				continue;
-			}
-			// [VK]
-			for (int i = 0; i < MAX_KEYNAME; ++i) {
-				size_t keylen = _tcslen(KeyNames[i].name);
-				if (!_tcsncmp(def, KeyNames[i].name, keylen)) {
-					KeyBind keybind = {NONE, KeyNames[i].bVk};
-					keybinds.push_back(keybind);
-					def += keylen;
-					break;
-				}
-			}
-		}
-	} else
-		return;
-
 	BOOL bM_x = FALSE;
 	TCHAR szPath[MAX_PATH] = {'\0'};
 	unsigned int index = 0;
 	BOOL bInitialized = FALSE;
 	UINT before = GetModifierState(FALSE);
 
-	for (std::vector<KeyBind>::const_iterator p = keybinds.begin(); p != keybinds.end(); ++p) {
-		const int nType = p->nType;
-		const BYTE bVk = p->bVk;
-		int (*fCommand)() = nType < MAX_COMMAND_TYPE ? Commands[m_Config.nCommandID[m_nAppID][nType][bVk]].fCommand : NULL;
+	for (KeyBind *p = m_Config.FuncDefs[id]; p->bVk; ++p) {
+		int nType = p->nType;
+		BYTE bVk = p->bVk;
+		int (*fCommand)() = nType < MAX_COMMAND_TYPE ? CmdTable::Command(m_CmdID[nType][bVk]) : NULL;
 		if (fCommand) {
 			if (fCommand == CCommands::ExecuteExtendedCommand)
 				bM_x = TRUE;
@@ -1189,7 +1065,7 @@ void CXkeymacsDll::CallFunction(int nFuncID)
 				SetModifierState(0, before);
 				bInitialized = TRUE;
 			}
-//			CUtils::Log("CallFunction: Command Name: %s", Commands[m_Config.nCommandID[m_nAppID][nType][bVk]].szCommandName);
+//			CUtils::Log("CallFunction: Command Name: %s", Commands[m_CurrentConfig->CmdID[nType][bVk]].szCommandName);
 			while (fCommand() == GOTO_RECURSIVE)
 				;
 			continue;
@@ -1197,16 +1073,8 @@ void CXkeymacsDll::CallFunction(int nFuncID)
 		if (bM_x) {
 			if (bVk == VK_RETURN)
 				InvokeM_x(szPath);
-			else if (bVk != 0) {
-				TCHAR nAscii = 0;
-				do { // 1-127
-					if (a2v(++nAscii) == bVk && ((nType & SHIFT) != 0) == IsShift(nAscii)) {
-//						CUtils::Log("M-x: %#X (%c), %#X (%c)", bVk, bVk, nAscii, nAscii);
-						szPath[index++] = nAscii;
-						break;
-					}
-				} while (nAscii != 127);
-			}
+			else if (bVk != 0)
+				szPath[index++] = static_cast<TCHAR>(ConvVkey((bVk | (nType << 8)) & 0x7ff /* drop CONTROLX */, 1));
 			continue;
 		}
 		if (!bInitialized) {
@@ -1222,7 +1090,7 @@ void CXkeymacsDll::CallFunction(int nFuncID)
 		if (nType & SHIFT)
 			DepressKey(VK_SHIFT);
 		Kdu(bVk);
-		const int nNextType = (p + 1) != keybinds.end() ? (p + 1)->nType : 0;
+		int nNextType = (p + 1)->nType;
 		if (nType & SHIFT && !(nNextType & SHIFT))
 			ReleaseKey(VK_SHIFT);
 		if (nType & WIN_ALT && !(nNextType & WIN_ALT))
@@ -1239,215 +1107,33 @@ void CXkeymacsDll::CallFunction(int nFuncID)
 	return;
 }
 
-KeyBind CXkeymacsDll::ParseKey(LPCTSTR& def)
+SHORT CXkeymacsDll::ConvVkey(SHORT in, int mode)
 {
-	KeyBind keybind = {NONE};
-	if (*def == _T('\\')) { // set modifiers
-		++def;
-	LOOP:
-		for (int i = 0; i < MAX_MODIFIER; ++i) {
-			size_t len = _tcslen(Modifiers[i].name);
-			if (!_tcsncmp(def, Modifiers[i].name, len)) {
-				keybind.nType |= Modifiers[i].id;
-				def += len;
-				goto LOOP;
-			}
-		}
+	HKL h = GetKeyboardLayout(0);
+	if (mode == 0) { // ASCII to VKey and state
+		SHORT r = VkKeyScanEx(static_cast<TCHAR>(in), h);
+		if (r < 0) // no key correcpont to the char
+			return 0;
+		return r & 0x7ff; // drop state flags of Hankaku and others
 	}
-	if (IsShift(*def) && !(keybind.nType & (WIN_CTRL | WIN_ALT | WIN_WIN)))
-		keybind.nType |= SHIFT;
-	int i = 0;
-	for (; i < MAX_KEYNAME; ++i) {
-		size_t len = _tcslen(KeyNames[i].name);
-		if (!_tcsncmp(def, KeyNames[i].name, len)) {
-			def += len;
-			break;
-		}
-	}
-	keybind.bVk = i < MAX_KEYNAME ? KeyNames[i].bVk : a2v(*def++);
-	return keybind;
-}
-
-BOOL CXkeymacsDll::IsShift(TCHAR nAscii)
-{
-	switch (nAscii) {
-	case _T(' '):
-		return FALSE;
-	case _T('!'):
-	case _T('"'):
-	case _T('#'):
-	case _T('$'):
-	case _T('%'):
-	case _T('&'):
-		return TRUE;
-	case _T('\''):
-		return m_Config.b106Keyboard;
-	case _T('('):
-	case _T(')'):
-	case _T('*'):
-	case _T('+'):
-		return TRUE;
-	case _T(','):
-	case _T('-'):
-	case _T('.'):
-	case _T('/'):
-	case _T('0'): case _T('1'): case _T('2'): case _T('3'): case _T('4'): case _T('5'): case _T('6'): case _T('7'): case _T('8'): case _T('9'):
-		return FALSE;
-	case _T(':'):
-		return !m_Config.b106Keyboard;
-	case _T(';'):
-		return FALSE;
-	case _T('<'):
-		return TRUE;
-	case _T('='):
-		return m_Config.b106Keyboard;
-	case _T('>'):
-	case _T('?'):
-		return TRUE;
-	case _T('@'):
-		return !m_Config.b106Keyboard;
-	case _T('A'): case _T('B'): case _T('C'): case _T('D'): case _T('E'): case _T('F'): case _T('G'): case _T('H'): case _T('I'): case _T('J'): 
-	case _T('K'): case _T('L'): case _T('M'): case _T('N'): case _T('O'): case _T('P'): case _T('Q'): case _T('R'): case _T('S'): case _T('T'): 
-	case _T('U'): case _T('V'): case _T('W'): case _T('X'): case _T('Y'): case _T('Z'): 
-		return TRUE;
-	case _T('['):
-	case _T('\\'):
-	case _T(']'):
-		return FALSE;
-	case _T('^'):
-		return !m_Config.b106Keyboard;
-	case _T('_'):
-		return TRUE;
-	case _T('`'):
-		return m_Config.b106Keyboard;
-	case _T('a'): case _T('b'): case _T('c'): case _T('d'): case _T('e'): case _T('f'): case _T('g'): case _T('h'): case _T('i'): case _T('j'): 
-	case _T('k'): case _T('l'): case _T('m'): case _T('n'): case _T('o'): case _T('p'): case _T('q'): case _T('r'): case _T('s'): case _T('t'): 
-	case _T('u'): case _T('v'): case _T('w'): case _T('x'): case _T('y'): case _T('z'): 
-		return FALSE;
-	case _T('{'):
-	case _T('|'):
-	case _T('}'):
-	case _T('~'):
-		return TRUE;
-	default:
-		return FALSE;
-	}
-}
-
-BYTE CXkeymacsDll::a2v(TCHAR nAscii)
-{
-	switch (nAscii) {
-	case _T(' '):
-		return VK_SPACE;
-	case _T('!'):
-		return '1';
-	case _T('"'):
-		return m_Config.b106Keyboard ? '2' : (BYTE) 0xde;	// VK_OEM_7
-	case _T('#'):
-		return '3';
-	case _T('$'):
-		return '4';
-	case _T('%'):
-		return '5';
-	case _T('&'):
-		return m_Config.b106Keyboard ? '6' : '7';
-	case _T('\''):
-		return m_Config.b106Keyboard ? '7' : (BYTE) 0xde;	// VK_OEM_7
-	case _T('('):
-		return m_Config.b106Keyboard ? '8' : '9';
-	case _T(')'):
-		return m_Config.b106Keyboard ? '9' : '0';
-	case _T('*'):
-		return m_Config.b106Keyboard ? (BYTE) 0xba : '8';	// VK_OEM_1
-	case _T('+'):
-		return 0xbb;	// VK_OEM_PLUS
-	case _T(','):
-		return 0xbc;	// VK_OEM_COMMA
-	case _T('-'):
-		return 0xbd;	// VK_OEM_MINUS
-	case _T('.'):
-		return 0xbe;	// VK_OEM_PERIOD
-	case _T('/'):
-		return 0xbf;	// VK_OEM_2
-	case _T('0'): case _T('1'): case _T('2'): case _T('3'): case _T('4'): case _T('5'): case _T('6'): case _T('7'): case _T('8'): case _T('9'):
-		return nAscii;
-	case _T(':'):
-		return 0xba;	// VK_OEM_1
-	case _T(';'):
-		return m_Config.b106Keyboard ? (BYTE) 0xbb : (BYTE) 0xba;	// VK_OEM_PLUS	VK_OEM_1
-	case _T('<'):
-		return 0xbc;	// VK_OEM_COMMA
-	case _T('='):
-		return m_Config.b106Keyboard ? (BYTE) 0xbd : (BYTE) 0xbb;	// VK_OEM_MINUS	VK_OEM_PLUS
-	case _T('>'):
-		return 0xbe;	// VK_OEM_PERIOD
-	case _T('?'):
-		return 0xbf;	// VK_OEM_2
-	case _T('@'):
-		return m_Config.b106Keyboard ? (BYTE) 0xc0 : '2';
-	case _T('A'): case _T('B'): case _T('C'): case _T('D'): case _T('E'): case _T('F'): case _T('G'): case _T('H'): case _T('I'): case _T('J'): 
-	case _T('K'): case _T('L'): case _T('M'): case _T('N'): case _T('O'): case _T('P'): case _T('Q'): case _T('R'): case _T('S'): case _T('T'): 
-	case _T('U'): case _T('V'): case _T('W'): case _T('X'): case _T('Y'): case _T('Z'): 
-		return nAscii;
-	case _T('['):
-		return 0xdb;	// VK_OEM_4
-	case _T('\\'):
-		return 0xdc;	// VK_OEM_5
-	case _T(']'):
-		return 0xdd;	// VK_OEM_6
-	case _T('^'):
-		return m_Config.b106Keyboard ? (BYTE) 0xde : '6';	// VK_OEM_7
-	case _T('_'):
-		return m_Config.b106Keyboard ? (BYTE) 0xe2 : (BYTE) 0xbd;	// VK_OEM_102	VK_OEM_MINUS
-	case _T('`'):
-		return 0xc0;	// VK_OEM_3
-	case _T('a'): case _T('b'): case _T('c'): case _T('d'): case _T('e'): case _T('f'): case _T('g'): case _T('h'): case _T('i'): case _T('j'): 
-	case _T('k'): case _T('l'): case _T('m'): case _T('n'): case _T('o'): case _T('p'): case _T('q'): case _T('r'): case _T('s'): case _T('t'): 
-	case _T('u'): case _T('v'): case _T('w'): case _T('x'): case _T('y'): case _T('z'): 
-		return (BYTE) (nAscii - (_T('a') - _T('A')));
-	case _T('{'):
-		return 0xdb;	// VK_OEM_4
-	case _T('|'):
-		return 0xdc;	// VK_OEM_5
-	case _T('}'):
-		return 0xdd;	// VK_OEM_6
-	case _T('~'):
-		return m_Config.b106Keyboard ? (BYTE) 0xde : (BYTE) 0xc0;	// VK_OEM_7	VK_OEM_3
-	default:
+	// VKey and state to ASCII
+	const BYTE down = 0x80;
+	BYTE state[256] = {0};
+	if (in & (1 << 8))
+		state[VK_SHIFT] = down;
+	if (in & (2 << 8))
+		state[VK_CONTROL] = down;
+	if (in & (4 << 8))
+		state[VK_MENU] = down;
+	UINT vkey = in & 0xff;
+	state[vkey] = down;
+	WORD word = 0;
+	int r = ToAsciiEx(vkey, MapVirtualKeyEx(vkey, MAPVK_VK_TO_VSC, h), state, &word, 0, h);
+	if (r == 0)
 		return 0;
-	}
-}
-
-BOOL CXkeymacsDll::IsMatchWindowText(CString szWindowText)
-{
-	BOOL bIsMatchWindowText = TRUE;
-
-	TCHAR szCurrentWindowText[WINDOW_TEXT_LENGTH] = {'\0'};
-	GetWindowText(GetForegroundWindow(), szCurrentWindowText, sizeof(szCurrentWindowText));
-
-	switch (CUtils::GetWindowTextType(szWindowText)) {
-	case IDS_WINDOW_TEXT_MATCH:								// *foo*
-		szWindowText.Delete(0);								// Delete first '*'
-		szWindowText.Delete(szWindowText.GetLength() - 1);	// Delete last '*'
-		bIsMatchWindowText = 0 <= CString(szCurrentWindowText).Find(szWindowText);
-		break;
-	case IDS_WINDOW_TEXT_MATCH_FORWARD:						// foo*
-		szWindowText.Delete(szWindowText.GetLength() - 1);	// Delete last '*'
-		bIsMatchWindowText = 0 == CString(szCurrentWindowText).Find(szWindowText);
-		break;
-	case IDS_WINDOW_TEXT_MATCH_BACKWARD:					// *foo
-		szWindowText.Delete(0);								// Delete first '*'
-		bIsMatchWindowText = 0 <= CString(szCurrentWindowText).Find(szWindowText, CString(szCurrentWindowText).GetLength() - szWindowText.GetLength());
-		break;
-	case IDS_WINDOW_TEXT_MATCH_FULL:						// foo
-		bIsMatchWindowText = szWindowText == CString(szCurrentWindowText);
-		break;
-	case IDS_WINDOW_TEXT_IGNORE:							// *
-		bIsMatchWindowText = TRUE;
-		break;
-	}
-//	CUtils::Log(_T("IsMatchWindowText: %d, _%s_, _%s_"), bIsMatchWindowText, szCurrentWindowText, szWindowText);
-	return bIsMatchWindowText;
+	if (r == 1)
+		return static_cast<SHORT>(word);
+	return static_cast<SHORT>(word >> 8); // drop a dead key
 }
 
 void CXkeymacsDll::SetAccelerate(int nAccelerate)

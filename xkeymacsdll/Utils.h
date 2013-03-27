@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "StdAfx.h"
+#include "AppName.h"
 
 // #define ENABLE_LOG
 #ifdef ENABLE_LOG
@@ -21,9 +21,12 @@
 class AFX_EXT_CLASS CUtils  
 {
 public:
+	static bool IsConsole();
+	static int GetWindowTextType(const CString& text);
+	static bool IsMatchWindowText(const CString& text);
+	static BOOL GetFindDialogTitle(CString *szDialogTitle);
 	static BOOL IsAtok();
 	static BOOL IsLunascape();
-	static int GetWindowTextType(CString strWindowText);
 	static BOOL IsThunderbird();
 	static BOOL IsOpenJane();
 	static BOOL IsVisualSlickEdit();
@@ -70,10 +73,8 @@ public:
 	static BOOL IsCsh();
 	static BOOL IsSh();
 	static BOOL IsBash();
-	static void SetCorrectApplicationName(LPTSTR szApplicationName, LPTSTR szWindowText);
 	static void Log(LPCTSTR fmt, ...);
 	static BOOL IsSleipnir();
-	static BOOL IsConsole();
 	static BOOL IsPaint();
 	static BOOL IsReget();
 	static BOOL IsMicrosoftPowerPoint();
@@ -92,8 +93,6 @@ public:
 	static BOOL IsEmacs();
 	static BOOL SetClipboardText(const CString& text);
 	static BOOL GetClipboardText(CString& text);
-	static void SetApplicationName(BOOL bImeComposition);
-	static LPCTSTR const GetApplicationName();
 	static BOOL IsXyzzy();
 	static BOOL IsWordpad();
 	static BOOL IsVisualCpp();
@@ -120,15 +119,8 @@ public:
 	static BOOL IsAstecX();
 	static BOOL IsXkeymacs();
 	static BOOL IsChrome();
-	static BOOL GetFindDialogTitle(CString *szDialogTitle);
-
 private:
 	static BOOL IsTOForEOF();
-	static void FairConsoleApplicationName(LPTSTR szApplicationName, LPTSTR szWindowText);
-	static BOOL IsConsole(LPCTSTR szApplicationName);
-	static BOOL IsJavaW(LPCTSTR szApplicationName);
-	static TCHAR m_szIMEName[MAX_PATH];
-	static TCHAR m_szApplicationName[MAX_PATH];
 };
 
 #endif // !defined(AFX_UTILS_H__D64BCD3F_F2E2_41F7_AD58_0F32E2D46942__INCLUDED_)

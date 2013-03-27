@@ -7,7 +7,6 @@
 // PropertiesAdvanced.h : header file
 //
 
-#include "stdafx.h"
 #include "resource.h"
 #include "../xkeymacsdll/Commands.h"
 class CProperties;
@@ -78,7 +77,7 @@ private:
 	static BOOL IsMetaDown();
 	static BOOL IsCtrlDown();
 	void InitCommandIDs();
-	static void SetCommandID(int nType, int nKey, int nComID);
+	static void SetCmdID(int nType, int nKey, int nComID);
 	static int m_nCommandIDs[MAX_COMMAND_TYPE][MAX_KEY];
 	static void SetNewKey();
 	static int m_nAssignKey;

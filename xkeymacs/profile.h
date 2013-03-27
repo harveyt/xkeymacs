@@ -11,15 +11,8 @@
 
 #include "resource.h"
 #include "properties.h"
+#include "KeyString.h"
 #include "../xkeymacsdll/ipc.h"
-
-struct TASK_LIST {
-    DWORD dwProcessId;
-    CHAR ProcessName[MAX_PATH];
-};
-typedef TASK_LIST *PTASK_LIST;
-
-enum { MAX_TASKS = 256 };
 
 enum HKEY_TYPE { CURRENT_USER, LOCAL_MACHINE, MAX_HKEY_TYPE };
 
@@ -28,65 +21,54 @@ class CKey;
 class CProfile
 {
 public:
-	static int GetKeyboardSpeed(void);
-	static CString GetWindowText(int nAppID);
-	static void SetWindowText(int nAppID, CString szWindowText);
-	static void SetEnableCUA(int nAppID, BOOL bEnableCUA);
-	static BOOL GetEnableCUA(int nAppID);
-	static void ImportProperties();
-	static void ExportProperties();
-	static void RestartComputer();
-	static BOOL IsVistaOrLater();
-	static void SaveScanCodeMap(HKEY_TYPE hkeyType);
-	static void LoadScanCodeMap(HKEY_TYPE hkeyType);
-	static BOOL Is106Keyboard();
-	static BOOL GetUseDialogSetting(int nAppID);
-	static void SetUseDialogSetting(int nAppID, BOOL bUseDialogSetting);
-	static int GetAppID(const LPCSTR szAppName);
-	static void CopyData(CString szDestinationApplication, CString szSourceApplication);
-	static void ReadKeyBind(int& pnCommandType, int& pnKey, LPCTSTR szKeyBind);
-	static LPCTSTR Key2String(int nKey);
-	static LPCTSTR CommandType2String(int nType);
-	static int GetKillRingMax(int nAppID);
-	static void SetKillRingMax(int nAppID, int nKillRingMax);
-	static int GetCommandID(int nAppID, int nType, int nKey);
-	static void SetCommandID(int nAppID, int nType, int nKey, int nComID);
-	static void SetAppTitle(const int nAppID, const CString& appTitle);
-	static int DefaultAppID();
-	static int AssignAppID(const LPCSTR szAppName);
-	static int GetSettingStyle(const int nAppID);
-	static void SetSettingStyle(const int nAppID, const int nSettingStyle);
-	static void InitAppList(CProperties& cProperties);
-	static int GetSavedSettingCount();
-	static void ClearData(CString szCurrentApplication);
-	static void InitDllData();
 	static void LoadData();
 	static void SaveData();
+	static void InitDllData();
+	static void StringToKey(LPCTSTR str, int& type, int& key);
+	static CString KeyToString(int type, int key);
+	static void GetAppList(TCHAR (&appTitle)[MAX_APP][WINDOW_TEXT_LENGTH], TCHAR (&appName)[MAX_APP][CLASS_NAME_LENGTH]);
+	static void ClearData(LPCTSTR appName);
+	static void CopyDefault(LPCTSTR appName);
+	static void CopyDefault(int dst);
+	static int AssignAppID(LPCTSTR appName);
+	static int DefaultAppID();
+	static int GetAppID(LPCTSTR appName);
+	static int GetSettingStyle(int nAppID);
+	static void SetSettingStyle(int nAppID, int nSettingStyle);
+	static void SetAppTitle(int nAppID, const CString& appTitle);
+	static int GetCmdID(int nAppID, int nType, int nKey);
+	static void SetCmdID(int nAppID, int nType, int nKey, int nComID);
+	static int GetFuncID(int nAppID, int nType, int nKey);
+	static void SetFuncID(int nAppID, int nType, int nKey, int nFuncID);
+	static bool GetUseDialogSetting(int nAppID);
+	static void SetUseDialogSetting(int nAppID, bool setting);
+	static void SetEnableCUA(int nAppID, bool enable);
+	static bool GetEnableCUA(int nAppID);
+	static int GetKillRingMax(int nAppID);
+	static void SetKillRingMax(int nAppID, int nKillRingMax);
+	static LPCTSTR GetWindowText(int nAppID);
+	static void SetWindowText(int nAppID, const CString& text);
+	static bool Is106Keyboard();
+	static BOOL IsVistaOrLater();
+	static void RestartComputer();
+	static void ImportProperties();
+	static void ExportProperties();
+	static int GetKeyboardSpeed(void);
 
 private:
-	static void SaveKeyBind(const LPCSTR szAppName, const LPCSTR szComName, int nType, int nKey);
-	static BOOL DiableTokenPrivileges();
-	static BOOL AdjustTokenPrivileges(LPCTSTR lpName);
-	static void SaveCommand(const LPCSTR szAppName, int nComID);
-	static void SaveKeyBind(const LPCSTR szAppName, int nComID, int nType, int nKey);
-	static void AddKeyBind2C_(const LPCSTR szApplicationName, BYTE bVk);
-	static void LevelUp();
-	static bool GetAppTitle(CString& appTitle, const CString& windowName, int nth = 1000);
-	static BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam);
-	static void SetDllData();
 	static Config m_Config;
-	static TCHAR m_szAppTitle[MAX_APP][WINDOW_TEXT_LENGTH];
+	static KeyString m_KeyString;
+	static TCHAR m_AppTitle[MAX_APP][WINDOW_TEXT_LENGTH];
 	static void DeleteAllRegistryData();
-	static TASK_LIST m_TaskList[MAX_TASKS];
-	static DWORD m_dwTasks;
-	static void GetTaskList();
-	static BOOL IsCommandType(int nType, LPCTSTR szKeyBind);
-	static int KeyBind2Key(const LPCTSTR szKey);
-	static int KeyBind2CommandType(const LPCTSTR szKeyBind);
-	static CString WriteKeyBind(int nType, int nKey);
+	static void LevelUp();
+	static void AddKeyBind2C_(LPCTSTR szApplicationName, BYTE bVk);
 	static void LoadRegistry();
 	static void SaveRegistry();
-	static void AddIMEInfo(CProperties& cProperties);
+	static void SetDllData();
+	static void SaveKeyBind(LPCTSTR appName, int comID, int type, int key);
+	static void SaveKeyBind(LPCTSTR appName, LPCTSTR comName, int type, int key);
+	static BOOL DiableTokenPrivileges();
+	static BOOL AdjustTokenPrivileges(LPCTSTR lpName);
 };
 
 #endif // !defined(AFX_PROFILE_H__9415254D_4656_484B_A730_E02580D8A221__INCLUDED_)
