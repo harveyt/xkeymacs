@@ -260,6 +260,7 @@ LRESULT CALLBACK CXkeymacsDll::CallWndProc(int nCode, WPARAM wParam, LPARAM lPar
 	if (nCode >= 0) {
 		const CWPSTRUCT *cwps = reinterpret_cast<CWPSTRUCT *>(lParam);
 		switch (cwps->message) {
+#if 0 // Confuses Emacs
 		case WM_IME_STARTCOMPOSITION:
 			AppName::SetIMEState(true);
 			InitKeyboardProc();
@@ -268,6 +269,7 @@ LRESULT CALLBACK CXkeymacsDll::CallWndProc(int nCode, WPARAM wParam, LPARAM lPar
 			AppName::SetIMEState(false);
 			InitKeyboardProc();
 			break;
+#endif
 		case WM_SETFOCUS:
 			if (cwps->hwnd == GetForegroundWindow()) {
 				AppName::SetIMEState(false);
@@ -311,6 +313,7 @@ LRESULT CALLBACK CXkeymacsDll::GetMsgProc(int nCode, WPARAM wParam, LPARAM lPara
 	if (nCode >= 0) {
 		const MSG *msg = reinterpret_cast<MSG *>(lParam);
 		switch (msg->message) {
+#if 0 // Confuses Emacs
 		case WM_IME_STARTCOMPOSITION:
 			AppName::SetIMEState(true);
 			InitKeyboardProc();
@@ -319,6 +322,7 @@ LRESULT CALLBACK CXkeymacsDll::GetMsgProc(int nCode, WPARAM wParam, LPARAM lPara
 			AppName::SetIMEState(false);
 			InitKeyboardProc();
 			break;
+#endif
 		}
 	}
 	return CallNextHookEx(NULL, nCode, wParam, lParam);
